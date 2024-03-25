@@ -3,6 +3,7 @@
         "mman.h": "c",
         "stat.h": "c",
         "fcntl.h": "c",
-        "memory.h": "c"
+        "memory.h": "c",
+        "main.h": "c"
     }
 }
