@@ -6,9 +6,10 @@ int execute_doctor(int doctor_id, struct data_container* data, struct communicat
         struct admission* adm;
         doctor_receive_admission(adm, doctor_id, data, comm);
         if (adm->id != -1) {
-            doctor_process_admission(adm, doctor_id, data);
+            doctor_process_admission(adm, doctor_id, data); 
         }
     }
+    return *(data->doctor_stats + doctor_id);
 }
 
 void doctor_receive_admission(struct admission* ad, int doctor_id, struct data_container* data, struct communication* comm){
@@ -18,11 +19,12 @@ void doctor_receive_admission(struct admission* ad, int doctor_id, struct data_c
 }
 
 void doctor_process_admission(struct admission* ad, int doctor_id, struct data_container* data){
-    while (ad->status == 'A'){
-        //What criteria???
-        if (0 == 0){
-            ad->status = 'N';
-        }
+    
+    if (ad->id > data->max_ads){
+        ad->status = 'N';
     }
-    //Store results? how?
+    
+    *(data->results) = *ad;
+    *(data->doctor_stats + doctor_id) += 1;
+    data->results = data->results + (sizeof(struct admission));
 }
