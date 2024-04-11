@@ -4,9 +4,9 @@
 * Joao Dias     fc59854
 * Nuno Graxinha fc59855
 */
-
 #include "../include/process.h"
 #include <stdlib.h>
+#include <sys/wait.h>
 
 int launch_patient(int patient_id, struct data_container* data, struct communication* comm) {
     int child_pid = fork();
@@ -49,6 +49,6 @@ int launch_doctor(int doctor_id, struct data_container* data, struct communicati
 
 int wait_process(int process_id) {
     int status;
-    wait_pid(process_id, &status, 0);
+    waitpid(process_id, &status, WNOHANG);
     return status;
 }
