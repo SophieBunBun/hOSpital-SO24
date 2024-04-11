@@ -1,3 +1,10 @@
+/**
+* Grupo SO-028
+* Sofia Santos  fc59804
+* Joao Dias     fc59854
+* Nuno Graxinha fc59855
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "../include/memory.h"
