@@ -1,4 +1,9 @@
 #-----------------------------------------------------------------------------------
+# Grupo SO-028
+# Sofia Santos  fc59804
+# Joao Dias     fc59854
+# Nuno Graxinha fc59855
+#-----------------------------------------------------------------------------------
 # directories; we don't HAVE to have this, but it's standard procedure
 OBJ_dir = obj
 INCLUDE_dir = include
@@ -7,11 +12,13 @@ BIN_dir = bin
 
 #-----------------------------------------------------------------------------------
 # I want to make this dynamic instead of having to rely on actual files....
-OBJECTOS = main.o doctor.o memory.o
+OBJECTOS = main.o doctor.o memory.o patient.o receptionist.o process.o
 
 main.o =
 doctor.o = 
 memory.o = 
+patient.o = 
+process.o =
 #-----------------------------------------------------------------------------------
 # Will change the name of the output file!
 FILENAME = out

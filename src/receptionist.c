@@ -1,3 +1,10 @@
+/**
+* Grupo SO-028
+* Sofia Santos  fc59804
+* Joao Dias     fc59854
+* Nuno Graxinha fc59855
+*/
+
 #include "../include/receptionist.h"
 
 int execute_receptionist(int receptionist_id, struct data_container* data, struct communication* comm){

@@ -1,8 +1,17 @@
+/**
+* Grupo SO-028
+* Sofia Santos  fc59804
+* Joao Dias     fc59854
+* Nuno Graxinha fc59855
+*/
+
+#include <stdlib.h>
+#include <string.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/fcntl.h>
 
-#include "include/memory.h"
+#include "../include/memory.h"
 
 
 void* create_shared_memory(char* name, int size){
