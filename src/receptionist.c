@@ -1,11 +1,7 @@
-/**
-* Grupo SO-028
-* Sofia Santos  fc59804
-* Joao Dias     fc59854
-* Nuno Graxinha fc59855
-*/
-
+#include <stdio.h>
+#include <stdlib.h>
 #include "../include/receptionist.h"
+#include "memory.c"
 
 int execute_receptionist(int receptionist_id, struct data_container* data, struct communication* comm){
     int admissions_processed = 0;
