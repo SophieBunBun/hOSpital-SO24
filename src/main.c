@@ -27,12 +27,6 @@ int main(int argc, char *argv[]) {
     create_shared_memory_buffers(data, comm);
     launch_processes(data, comm);
     user_interaction(data, comm);
-    //release memory before terminating
-    deallocate_dynamic_memory(data);
-    deallocate_dynamic_memory(comm->main_patient);
-    deallocate_dynamic_memory(comm->patient_receptionist);
-    deallocate_dynamic_memory(comm->receptionist_doctor);
-    deallocate_dynamic_memory(comm);
 }
 
 void main_args(int argc, char* argv[], struct data_container* data) {
@@ -54,11 +48,6 @@ void allocate_dynamic_memory_buffers(struct data_container* data) {
     data->patient_pids = allocate_dynamic_memory(data->n_patients * sizeof(int));
     data->receptionist_pids = allocate_dynamic_memory(data->n_receptionists * sizeof(int));
     data->doctor_pids = allocate_dynamic_memory(data->n_doctors * sizeof(int));
-    data->patient_stats = allocate_dynamic_memory(data->n_patients * sizeof(int));
-    data->receptionist_stats = allocate_dynamic_memory(data->n_receptionists * sizeof(int));
-    data->doctor_stats = allocate_dynamic_memory(data->n_doctors * sizeof(int));
-    data->results = allocate_dynamic_memory(data->max_ads * sizeof(struct admission));
-    data->terminate = allocate_dynamic_memory(sizeof(int));
 
 }
     
@@ -67,7 +56,7 @@ void create_shared_memory_buffers(struct data_container* data, struct communicat
     comm->main_patient = allocate_dynamic_memory(sizeof(struct circular_buffer));
     comm->patient_receptionist = allocate_dynamic_memory(sizeof(struct rnd_access_buffer));
     comm->receptionist_doctor = allocate_dynamic_memory(sizeof(struct circular_buffer));
-    
+
     comm->main_patient->ptrs = create_shared_memory(STR_SHM_MAIN_PATIENT_PTR, sizeof(struct pointers));
     comm->patient_receptionist->ptrs = create_shared_memory(STR_SHM_PATIENT_RECEPT_PTR, sizeof(struct pointers));
     comm->receptionist_doctor->ptrs = create_shared_memory(STR_SHM_RECEPT_DOCTOR_PTR, sizeof(struct pointers));
@@ -78,6 +67,10 @@ void create_shared_memory_buffers(struct data_container* data, struct communicat
     
     data->results = create_shared_memory(STR_SHM_RESULTS, sizeof(struct admission) * MAX_RESULTS);
     data->terminate = create_shared_memory(STR_SHM_TERMINATE, sizeof(int));
+
+    data->patient_stats = create_shared_memory(STR_SHM_PATIENT_STATS, data->n_patients * sizeof(int));
+    data->receptionist_stats = create_shared_memory(STR_SHM_RECEPT_STATS, data->n_receptionists * sizeof(int));
+    data->doctor_stats = create_shared_memory(STR_SHM_DOCTOR_STATS, data->n_doctors * sizeof(int));
 }
     
 void launch_processes(struct data_container* data, struct communication* comm) {
@@ -184,7 +177,7 @@ void print_array(int* array, int size) {
             printf(", ");
         }
     }
-    printf("]");
+    printf("]\n");
 }
 
 void print_status(struct data_container* data) {
@@ -266,25 +259,18 @@ void destroy_memory_buffers(struct data_container* data, struct communication* c
     destroy_shared_memory(STR_SHM_MAIN_PATIENT_BUFFER, comm->main_patient->buffer, sizeof(struct admission) * data->buffers_size);
     destroy_shared_memory(STR_SHM_PATIENT_RECEPT_BUFFER, comm->patient_receptionist->buffer, sizeof(struct admission) * data->buffers_size);
     destroy_shared_memory(STR_SHM_RECEPT_DOCTOR_BUFFER, comm->receptionist_doctor->buffer, sizeof(struct admission) * data->buffers_size);
-    
+
     destroy_shared_memory(STR_SHM_RESULTS, data->results, sizeof(struct admission) * MAX_RESULTS);
     destroy_shared_memory(STR_SHM_TERMINATE, data->terminate, sizeof(int));
+
+    destroy_shared_memory(STR_SHM_PATIENT_STATS, data->patient_stats, data->n_patients * sizeof(int));
+    destroy_shared_memory(STR_SHM_RECEPT_STATS, data->receptionist_stats, data->n_receptionists * sizeof(int));
+    destroy_shared_memory(STR_SHM_DOCTOR_STATS, data->doctor_stats, data->n_doctors * sizeof(int));
 
     deallocate_dynamic_memory(data->patient_pids);
     deallocate_dynamic_memory(data->receptionist_pids);
     deallocate_dynamic_memory(data->doctor_pids);
-    deallocate_dynamic_memory(data->patient_stats);
-    deallocate_dynamic_memory(data->receptionist_stats);
-    deallocate_dynamic_memory(data->doctor_stats);
-    deallocate_dynamic_memory(data->results);
-    deallocate_dynamic_memory(data->terminate);
     deallocate_dynamic_memory(data);
-    deallocate_dynamic_memory(comm->main_patient->ptrs);
-    deallocate_dynamic_memory(comm->main_patient->buffer);
-    deallocate_dynamic_memory(comm->patient_receptionist->ptrs);
-    deallocate_dynamic_memory(comm->patient_receptionist->buffer);
-    deallocate_dynamic_memory(comm->receptionist_doctor->ptrs);
-    deallocate_dynamic_memory(comm->receptionist_doctor->buffer);
     deallocate_dynamic_memory(comm->main_patient);
     deallocate_dynamic_memory(comm->patient_receptionist);
     deallocate_dynamic_memory(comm->receptionist_doctor);
