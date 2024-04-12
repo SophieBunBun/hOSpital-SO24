@@ -16,7 +16,7 @@ int execute_patient(int patient_id, struct data_container* data, struct communic
             patient_process_admission(ad, patient_id, data);
         }
     }
-    return (*(data -> patient_stats) + patient_id); //patient_stats was a pointer, needs to be de-referenced then added
+    return ((data -> patient_stats)[patient_id]); //patient_stats was a pointer, needs to be de-referenced then added
 }
 
 void patient_receive_admission(struct admission* ad, int patient_id, struct data_container* data, struct communication* comm) {
@@ -30,7 +30,7 @@ void patient_process_admission(struct admission* ad, int patient_id, struct data
         ad -> receiving_patient = patient_id;
         ad -> status = 'P';
 
-        *data -> patient_stats += 1;
+        (data -> patient_stats)[patient_id] += 1;
         *(data->results) = *ad; // add admission to results
         data -> results = data->results + (sizeof(struct admission)); // leaving space for the next admission
     }

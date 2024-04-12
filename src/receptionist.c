@@ -10,7 +10,6 @@
 #include "../include/receptionist.h"
 
 int execute_receptionist(int receptionist_id, struct data_container* data, struct communication* comm){
-    int admissions_processed = 0;
     while (*(data->terminate) != 1) {
         struct admission ad;
         receptionist_receive_admission(&ad, data, comm);
@@ -18,10 +17,9 @@ int execute_receptionist(int receptionist_id, struct data_container* data, struc
             printf("[Receptionist %d] Recebi a admissão com o id %d", receptionist_id, ad.id);
             receptionist_process_admission(&ad, receptionist_id, data);
             receptionist_send_admission(&ad, data, comm);
-            admissions_processed++;
         }
     }
-    return admissions_processed;
+    return (data->receptionist_stats)[receptionist_id];
 }
 
 void receptionist_receive_admission(struct admission* ad, struct data_container* data, struct communication* comm) {
@@ -33,7 +31,7 @@ void receptionist_receive_admission(struct admission* ad, struct data_container*
 void receptionist_process_admission(struct admission* ad, int receptionist_id, struct data_container* data) {
     ad->receiving_receptionist = receptionist_id;
     ad->status = 'R';
-    *(data->receptionist_stats + receptionist_id) += 1;
+    (data->receptionist_stats)[receptionist_id] += 1;
 }
 
 void receptionist_send_admission(struct admission* ad, struct data_container* data, struct communication* comm) {
