@@ -6,6 +6,7 @@
 */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -48,7 +49,7 @@ void write_patient_receptionist_buffer(struct rnd_access_buffer* buffer, int buf
     struct admission* bufferCont = buffer->buffer;
 
     for (int i = 0; i < buffer_size; i++){
-        if (*(ptrs + (i * sizeof(int))) == 0){
+        if (ptrs[i] == 0){
             bufferCont[i] = *ad;
             ptrs[i] = 1;
             break;
@@ -72,7 +73,7 @@ void read_main_patient_buffer(struct circular_buffer* buffer, int patient_id, in
 
     struct admission adm = bufferCont[ptrs->out];
 
-    if (adm.receiving_patient == patient_id){
+    if (adm.requesting_patient == patient_id){
         *ad = adm;
         ptrs->out = ((ptrs->out) + 1) % buffer_size;
     }
@@ -86,9 +87,9 @@ void read_patient_receptionist_buffer(struct rnd_access_buffer* buffer, int buff
     struct admission* bufferCont = buffer->buffer;
 
     for (int i = 0; i < buffer_size; i++){
-        if (*(ptrs + (i * sizeof(int))) == 1){
+        if (ptrs[i] == 1){
             *ad = bufferCont[i];
-            ptrs[i]= 0;
+            ptrs[i] = 0;
             break;
         }
         else {

@@ -80,12 +80,12 @@ void launch_processes(struct data_container* data, struct communication* comm) {
         data ->patient_pids[i] = pid;
     } 
 
-    for (int i = 0; i < data->n_receptionists; ++i) {
+    for (int i = 0; i < data->n_receptionists; i++) {
         int pid = launch_receptionist(i + 1, data, comm);
         data->receptionist_pids[i] = pid;
     }
 
-    for (int i = 0; i < data->n_doctors; ++i) {
+    for (int i = 0; i < data->n_doctors; i++) {
         int pid = launch_doctor(i + 1, data, comm);
         data->doctor_pids[i] = pid;
     }
@@ -132,7 +132,7 @@ void create_request(int* ad_counter, struct data_container* data, struct communi
 
         struct admission new_admission;
         new_admission.id = admission_id;
-        new_admission.receiving_patient = patient_id;
+        new_admission.requesting_patient = patient_id;
         new_admission.requested_doctor = doctor_id;
         new_admission.status = 'P';
         

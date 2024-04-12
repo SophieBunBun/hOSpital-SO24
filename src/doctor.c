@@ -6,6 +6,9 @@
 */
 
 #include "../include/doctor.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 int execute_doctor(int doctor_id, struct data_container* data, struct communication* comm){
 
@@ -13,11 +16,11 @@ int execute_doctor(int doctor_id, struct data_container* data, struct communicat
         struct admission* adm;
         doctor_receive_admission(adm, doctor_id, data, comm);
         if (adm->id != -1) {
-            printf("[Doctor %d] Recebi a admissão com o id %d", doctor_id, adm->id);
+            fprintf(stderr, "[Doctor %d] Recebi a admissão com o id %d\n", doctor_id, adm->id);
             doctor_process_admission(adm, doctor_id, data); 
         }
     }
-    return *(data->doctor_stats + (doctor_id * sizeof(int)));
+    return (data->doctor_stats)[doctor_id - 1];
 }
 
 void doctor_receive_admission(struct admission* ad, int doctor_id, struct data_container* data, struct communication* comm){
@@ -28,11 +31,11 @@ void doctor_receive_admission(struct admission* ad, int doctor_id, struct data_c
 
 void doctor_process_admission(struct admission* ad, int doctor_id, struct data_container* data){
     
-    if (ad->id > data->max_ads){
+    if (ad->id <= data->max_ads){
         ad->status = 'N';
     }
     
     *(data->results) = *ad;
-    *(data->doctor_stats + (doctor_id * sizeof(int))) += 1;
+    (data->doctor_stats)[doctor_id - 1] += 1;
     data->results = data->results + (sizeof(struct admission));
 }

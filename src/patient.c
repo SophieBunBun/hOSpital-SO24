@@ -6,17 +6,21 @@
 */
 
 #include "../include/patient.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 int execute_patient(int patient_id, struct data_container* data, struct communication* comm) {
     while(*(data->terminate) != 1) {
         struct admission* ad;
         patient_receive_admission(ad, patient_id, data, comm);
         if(ad->id != -1) {
-            printf("[Patient %d] Recebi a admissão com o id %d", patient_id, ad->id);
+            fprintf(stderr, "[Patient %d] Recebi a admissão com o id %d\n", patient_id, ad->id);
             patient_process_admission(ad, patient_id, data);
+            patient_send_admission(ad, data, comm);
         }
     }
-    return ((data -> patient_stats)[patient_id]); //patient_stats was a pointer, needs to be de-referenced then added
+    return ((data -> patient_stats)[patient_id - 1]); //patient_stats was a pointer, needs to be de-referenced then added
 }
 
 void patient_receive_admission(struct admission* ad, int patient_id, struct data_container* data, struct communication* comm) {
@@ -26,11 +30,11 @@ void patient_receive_admission(struct admission* ad, int patient_id, struct data
 }
 
 void patient_process_admission(struct admission* ad, int patient_id, struct data_container* data) {
-    if (ad->id > data->max_ads){
+    if (ad->id <= data->max_ads){
         ad -> receiving_patient = patient_id;
         ad -> status = 'P';
 
-        (data -> patient_stats)[patient_id] += 1;
+        (data -> patient_stats)[patient_id - 1] += 1;
         *(data->results) = *ad; // add admission to results
         data -> results = data->results + (sizeof(struct admission)); // leaving space for the next admission
     }

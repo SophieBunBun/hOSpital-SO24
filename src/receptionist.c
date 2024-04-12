@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../include/receptionist.h"
 
 int execute_receptionist(int receptionist_id, struct data_container* data, struct communication* comm){
@@ -14,12 +15,12 @@ int execute_receptionist(int receptionist_id, struct data_container* data, struc
         struct admission ad;
         receptionist_receive_admission(&ad, data, comm);
         if (ad.id != -1) {
-            printf("[Receptionist %d] Recebi a admissão com o id %d", receptionist_id, ad.id);
+            fprintf(stderr, "[Receptionist %d] Recebi a admissão com o id %d\n", receptionist_id, ad.id);
             receptionist_process_admission(&ad, receptionist_id, data);
             receptionist_send_admission(&ad, data, comm);
         }
     }
-    return (data->receptionist_stats)[receptionist_id];
+    return (data->receptionist_stats)[receptionist_id - 1];
 }
 
 void receptionist_receive_admission(struct admission* ad, struct data_container* data, struct communication* comm) {
@@ -29,9 +30,11 @@ void receptionist_receive_admission(struct admission* ad, struct data_container*
 }
 
 void receptionist_process_admission(struct admission* ad, int receptionist_id, struct data_container* data) {
-    ad->receiving_receptionist = receptionist_id;
-    ad->status = 'R';
-    (data->receptionist_stats)[receptionist_id] += 1;
+    if (ad->id <= data->max_ads){
+        ad->receiving_receptionist = receptionist_id;
+        ad->status = 'R';
+        (data->receptionist_stats)[receptionist_id - 1] += 1;
+    }
 }
 
 void receptionist_send_admission(struct admission* ad, struct data_container* data, struct communication* comm) {
