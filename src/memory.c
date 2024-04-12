@@ -73,7 +73,6 @@ void read_main_patient_buffer(struct circular_buffer* buffer, int patient_id, in
     struct admission adm = bufferCont[ptrs->out];
 
     if (adm.receiving_patient == patient_id){
-        printf("reading as patient %d", patient_id);
         *ad = adm;
         ptrs->out = ((ptrs->out) + 1) % buffer_size;
         return;
