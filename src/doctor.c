@@ -9,7 +9,7 @@
 
 int execute_doctor(int doctor_id, struct data_container* data, struct communication* comm){
 
-    while (data->terminate == 0){
+    while (*(data->terminate) != 1){
         struct admission* adm;
         doctor_receive_admission(adm, doctor_id, data, comm);
         if (adm->id != -1) {
@@ -21,7 +21,7 @@ int execute_doctor(int doctor_id, struct data_container* data, struct communicat
 }
 
 void doctor_receive_admission(struct admission* ad, int doctor_id, struct data_container* data, struct communication* comm){
-    if (data->terminate == 0){
+    if (*(data->terminate) != 1){
         read_receptionist_doctor_buffer(comm->receptionist_doctor, doctor_id, data->buffers_size, ad);
     }
 }

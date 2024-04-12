@@ -38,7 +38,7 @@ void write_main_patient_buffer(struct circular_buffer* buffer, int buffer_size, 
     struct admission* bufferCont = buffer->buffer;
 
     if (((ptrs->in) + 1) % buffer_size != (ptrs->out)){
-        *(bufferCont + (ptrs->in * sizeof(struct admission))) = *ad;
+        bufferCont[ptrs->in] = *ad;
         ptrs->in = ((ptrs->in) + 1) % buffer_size;
     }
 }
@@ -49,8 +49,8 @@ void write_patient_receptionist_buffer(struct rnd_access_buffer* buffer, int buf
 
     for (int i = 0; i < buffer_size; i++){
         if (*(ptrs + (i * sizeof(int))) == 0){
-            *(bufferCont + (i * sizeof(struct admission))) = *ad;
-            *(ptrs + (i * sizeof(int))) = 1;
+            bufferCont[i] = *ad;
+            ptrs[i] = 1;
             break;
         }
     }
@@ -61,7 +61,7 @@ void write_receptionist_doctor_buffer(struct circular_buffer* buffer, int buffer
     struct admission* bufferCont = buffer->buffer;
 
     if (((ptrs->in) + 1) % buffer_size != (ptrs->out)){
-        *(bufferCont + (ptrs->in * sizeof(struct admission))) = *ad;
+        bufferCont[ptrs->in] = *ad;
         ptrs->in = ((ptrs->in) + 1) % buffer_size;
     }
 }
@@ -70,23 +70,15 @@ void read_main_patient_buffer(struct circular_buffer* buffer, int patient_id, in
     struct pointers* ptrs = buffer->ptrs;
     struct admission* bufferCont = buffer->buffer;
 
-    int initialIn = ptrs->in;
+    struct admission adm = bufferCont[ptrs->out];
 
-    while (((ptrs->out) + 1) % buffer_size != initialIn){
-
-        struct admission* adm = bufferCont + (ptrs->in * sizeof(struct admission));
-
-        if ((*adm).requesting_patient != patient_id){
-            write_main_patient_buffer(buffer, buffer_size, adm);
-            ptrs->out = ((ptrs->out) + 1) % buffer_size;
-        }
-        else {
-            *ad = *adm;
-            ptrs->out = ((ptrs->out) + 1) % buffer_size;
-            return;
-        }
+    if (adm.receiving_patient == patient_id){
+        printf("reading as patient %d", patient_id);
+        *ad = adm;
+        ptrs->out = ((ptrs->out) + 1) % buffer_size;
+        return;
     }
-
+    
     ad->id = -1;
 }
 
@@ -96,8 +88,8 @@ void read_patient_receptionist_buffer(struct rnd_access_buffer* buffer, int buff
 
     for (int i = 0; i < buffer_size; i++){
         if (*(ptrs + (i * sizeof(int))) == 1){
-            *ad = *(bufferCont + (i * sizeof(struct admission)));
-            *(ptrs + (i * sizeof(int))) = 0;
+            *ad = bufferCont[i];
+            ptrs[i]= 0;
             break;
         }
     }
@@ -109,20 +101,12 @@ void read_receptionist_doctor_buffer(struct circular_buffer* buffer, int doctor_
     struct pointers* ptrs = buffer->ptrs;
     struct admission* bufferCont = buffer->buffer;
 
-    int initialIn = ptrs->in;
+    struct admission adm = bufferCont[ptrs->out];
 
-    while (ptrs->out != initialIn){
-        
-        struct admission* adm = bufferCont + (ptrs->in * sizeof(struct admission));
-
-        if ((*adm).requested_doctor != doctor_id){
-            write_receptionist_doctor_buffer(buffer, buffer_size, adm);
-            ptrs->out = ((ptrs->out) + 1) % buffer_size;
-        }
-        else {
-            *ad = *adm;
-            return;
-        }
+    if (adm.requested_doctor == doctor_id){
+        *ad = adm;
+        ptrs->out = ((ptrs->out) + 1) % buffer_size;
+        return;
     }
 
     ad->id = -1;

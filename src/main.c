@@ -128,7 +128,6 @@ void create_request(int* ad_counter, struct data_container* data, struct communi
     printf("Digite o ID do paciente e o ID do médico: ");
     scanf("%d %d", &patient_id, &doctor_id);
     if (((comm->main_patient->ptrs->in) + 1) % data->buffers_size != (comm->main_patient->ptrs->out)) {
-        int index = comm->main_patient->ptrs->in;
         int admission_id = (*ad_counter)++;
 
         struct admission new_admission;

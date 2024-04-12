@@ -11,7 +11,7 @@
 
 int execute_receptionist(int receptionist_id, struct data_container* data, struct communication* comm){
     int admissions_processed = 0;
-    while (*(data->terminate) == 0) {
+    while (*(data->terminate) != 1) {
         struct admission ad;
         receptionist_receive_admission(&ad, data, comm);
         if (ad.id != -1) {
@@ -25,8 +25,8 @@ int execute_receptionist(int receptionist_id, struct data_container* data, struc
 }
 
 void receptionist_receive_admission(struct admission* ad, struct data_container* data, struct communication* comm) {
-    if (*(data->terminate) == 0) {
-        read_patient_receptionist_buffer(comm->main_patient, data->buffers_size, ad);
+    if (*(data->terminate) != 1) {
+        read_patient_receptionist_buffer(comm->patient_receptionist, data->buffers_size, ad);
     }
 }
 
@@ -37,5 +37,5 @@ void receptionist_process_admission(struct admission* ad, int receptionist_id, s
 }
 
 void receptionist_send_admission(struct admission* ad, struct data_container* data, struct communication* comm) {
-    write_receptionist_doctor_buffer(comm->patient_receptionist, data->buffers_size, ad);
+    write_receptionist_doctor_buffer(comm->receptionist_doctor, data->buffers_size, ad);
 }

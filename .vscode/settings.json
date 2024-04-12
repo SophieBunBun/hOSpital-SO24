@@ -10,6 +10,8 @@
         "stdlib.h": "c",
         "cstdlib": "c",
         "patient.h": "c",
-        "doctor.h": "c"
+        "doctor.h": "c",
+        "receptionist.h": "c",
+        "process.h": "c"
     }
 }
