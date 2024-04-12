@@ -8,7 +8,7 @@
 #include "../include/patient.h"
 
 int execute_patient(int patient_id, struct data_container* data, struct communication* comm) {
-    while(data->terminate == 0) {
+    while(*(data->terminate) == 0) {
         struct admission* ad;
         patient_receive_admission(ad, patient_id, data, comm);
         if(patient_id != -1) {
@@ -19,8 +19,8 @@ int execute_patient(int patient_id, struct data_container* data, struct communic
 }
 
 void patient_receive_admission(struct admission* ad, int patient_id, struct data_container* data, struct communication* comm) {
-    if(data -> terminate == 0) {
-        read_patient_receptionist_buffer(comm->patient_receptionist, data->buffers_size, ad);
+    if(*(data->terminate) == 0) {
+        read_main_patient_buffer(comm->patient_receptionist, patient_id, data->buffers_size, ad);
     }
 }
 
@@ -36,5 +36,5 @@ void patient_process_admission(struct admission* ad, int patient_id, struct data
 }
 
 void patient_send_admission(struct admission* ad, struct data_container* data, struct communication* comm) {
-    write_main_patient_buffer(comm->main_patient, data->buffers_size, ad);
+    write_patient_receptionist_buffer(comm->main_patient, data->buffers_size, ad);
 }

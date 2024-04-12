@@ -5,7 +5,11 @@
 * Nuno Graxinha fc59855
 */
 #include "../include/process.h"
+#include "../include/patient.h"
+#include "../include/receptionist.h"
+#include "../include/doctor.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <sys/wait.h>
 
 int launch_patient(int patient_id, struct data_container* data, struct communication* comm) {

@@ -76,17 +76,17 @@ void create_shared_memory_buffers(struct data_container* data, struct communicat
 void launch_processes(struct data_container* data, struct communication* comm) {
 
     for(int i = 0; i < data->n_patients; i++){
-        int pid = launch_patient(i, data, comm);
+        int pid = launch_patient(i + 1, data, comm);
         data ->patient_pids[i] = pid;
     } 
 
     for (int i = 0; i < data->n_receptionists; ++i) {
-        int pid = launch_receptionist(i, data, comm);
+        int pid = launch_receptionist(i + 1, data, comm);
         data->receptionist_pids[i] = pid;
     }
 
     for (int i = 0; i < data->n_doctors; ++i) {
-        int pid = launch_doctor(i, data, comm);
+        int pid = launch_doctor(i + 1, data, comm);
         data->doctor_pids[i] = pid;
     }
 
