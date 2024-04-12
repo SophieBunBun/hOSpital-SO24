@@ -258,6 +258,18 @@ void write_statistics(struct data_container* data) {
 }
 
 void destroy_memory_buffers(struct data_container* data, struct communication* comm) {
+
+    destroy_shared_memory(STR_SHM_MAIN_PATIENT_PTR, comm->main_patient->ptrs, sizeof(struct pointers));
+    destroy_shared_memory(STR_SHM_PATIENT_RECEPT_PTR, comm->patient_receptionist->ptrs, sizeof(struct pointers));
+    destroy_shared_memory(STR_SHM_RECEPT_DOCTOR_PTR, comm->receptionist_doctor->ptrs, sizeof(struct pointers));
+    
+    destroy_shared_memory(STR_SHM_MAIN_PATIENT_BUFFER, comm->main_patient->buffer, sizeof(struct admission) * data->buffers_size);
+    destroy_shared_memory(STR_SHM_PATIENT_RECEPT_BUFFER, comm->patient_receptionist->buffer, sizeof(struct admission) * data->buffers_size);
+    destroy_shared_memory(STR_SHM_RECEPT_DOCTOR_BUFFER, comm->receptionist_doctor->buffer, sizeof(struct admission) * data->buffers_size);
+    
+    destroy_shared_memory(STR_SHM_RESULTS, data->results, sizeof(struct admission) * MAX_RESULTS);
+    destroy_shared_memory(STR_SHM_TERMINATE, data->terminate, sizeof(int));
+
     deallocate_dynamic_memory(data->patient_pids);
     deallocate_dynamic_memory(data->receptionist_pids);
     deallocate_dynamic_memory(data->doctor_pids);
