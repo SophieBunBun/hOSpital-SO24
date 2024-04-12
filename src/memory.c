@@ -75,10 +75,10 @@ void read_main_patient_buffer(struct circular_buffer* buffer, int patient_id, in
     if (adm.receiving_patient == patient_id){
         *ad = adm;
         ptrs->out = ((ptrs->out) + 1) % buffer_size;
-        return;
     }
-    
-    ad->id = -1;
+    else {
+        ad->id = -1;
+    }
 }
 
 void read_patient_receptionist_buffer(struct rnd_access_buffer* buffer, int buffer_size, struct admission* ad){
@@ -91,9 +91,10 @@ void read_patient_receptionist_buffer(struct rnd_access_buffer* buffer, int buff
             ptrs[i]= 0;
             break;
         }
+        else {
+            ad->id = -1;
+        }
     }
-
-    ad->id = -1;
 }
 
 void read_receptionist_doctor_buffer(struct circular_buffer* buffer, int doctor_id, int buffer_size, struct admission* ad){
@@ -105,8 +106,8 @@ void read_receptionist_doctor_buffer(struct circular_buffer* buffer, int doctor_
     if (adm.requested_doctor == doctor_id){
         *ad = adm;
         ptrs->out = ((ptrs->out) + 1) % buffer_size;
-        return;
     }
-
-    ad->id = -1;
+    else {
+        ad->id = -1;
+    }
 }
