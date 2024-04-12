@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../include/memory.h"
 #include "../include/process.h"
 #include "../include/main.h"
@@ -133,8 +134,7 @@ void create_request(int* ad_counter, struct data_container* data, struct communi
 
     printf("Digite o ID do paciente e o ID do médico: ");
     scanf("%d %d", &patient_id, &doctor_id);
-
-    if (comm->main_patient->ptrs->in != comm->main_patient->ptrs->out) {
+    if (((comm->main_patient->ptrs->in) + 1) % data->buffers_size != (comm->main_patient->ptrs->out)) {
         int index = comm->main_patient->ptrs->in;
         int admission_id = (*ad_counter)++;
 

@@ -4,6 +4,7 @@
         "stat.h": "c",
         "fcntl.h": "c",
         "memory.h": "c",
-        "main.h": "c"
+        "main.h": "c",
+        "stdio.h": "c"
     }
 }
