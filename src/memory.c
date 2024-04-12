@@ -73,7 +73,7 @@ void read_main_patient_buffer(struct circular_buffer* buffer, int patient_id, in
 
     struct admission adm = bufferCont[ptrs->out];
 
-    if (adm.requesting_patient == patient_id){
+    if (ptrs->in != ptrs->out && adm.requesting_patient == patient_id){
         *ad = adm;
         ptrs->out = ((ptrs->out) + 1) % buffer_size;
     }
@@ -104,7 +104,7 @@ void read_receptionist_doctor_buffer(struct circular_buffer* buffer, int doctor_
 
     struct admission adm = bufferCont[ptrs->out];
 
-    if (adm.requested_doctor == doctor_id){
+    if (ptrs->in != ptrs->out && adm.requested_doctor == doctor_id){
         *ad = adm;
         ptrs->out = ((ptrs->out) + 1) % buffer_size;
     }

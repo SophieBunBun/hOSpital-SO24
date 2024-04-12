@@ -20,7 +20,7 @@ int execute_doctor(int doctor_id, struct data_container* data, struct communicat
             doctor_process_admission(adm, doctor_id, data); 
         }
     }
-    return (data->doctor_stats)[doctor_id - 1];
+    return (data->doctor_stats)[doctor_id];
 }
 
 void doctor_receive_admission(struct admission* ad, int doctor_id, struct data_container* data, struct communication* comm){
@@ -36,6 +36,6 @@ void doctor_process_admission(struct admission* ad, int doctor_id, struct data_c
     }
     
     *(data->results) = *ad;
-    (data->doctor_stats)[doctor_id - 1] += 1;
+    (data->doctor_stats)[doctor_id] += 1;
     data->results = data->results + (sizeof(struct admission));
 }

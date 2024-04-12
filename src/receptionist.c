@@ -20,7 +20,7 @@ int execute_receptionist(int receptionist_id, struct data_container* data, struc
             receptionist_send_admission(&ad, data, comm);
         }
     }
-    return (data->receptionist_stats)[receptionist_id - 1];
+    return (data->receptionist_stats)[receptionist_id];
 }
 
 void receptionist_receive_admission(struct admission* ad, struct data_container* data, struct communication* comm) {
@@ -33,7 +33,7 @@ void receptionist_process_admission(struct admission* ad, int receptionist_id, s
     if (ad->id <= data->max_ads){
         ad->receiving_receptionist = receptionist_id;
         ad->status = 'R';
-        (data->receptionist_stats)[receptionist_id - 1] += 1;
+        (data->receptionist_stats)[receptionist_id] += 1;
     }
 }
 
