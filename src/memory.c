@@ -72,7 +72,7 @@ void read_main_patient_buffer(struct circular_buffer* buffer, int patient_id, in
 
     int initialIn = ptrs->in;
 
-    while (ptrs->out != initialIn){
+    while (((ptrs->out) + 1) % buffer_size != initialIn){
 
         struct admission* adm = bufferCont + (ptrs->in * sizeof(struct admission));
 
@@ -82,6 +82,7 @@ void read_main_patient_buffer(struct circular_buffer* buffer, int patient_id, in
         }
         else {
             *ad = *adm;
+            ptrs->out = ((ptrs->out) + 1) % buffer_size;
             return;
         }
     }
@@ -100,6 +101,8 @@ void read_patient_receptionist_buffer(struct rnd_access_buffer* buffer, int buff
             break;
         }
     }
+
+    ad->id = -1;
 }
 
 void read_receptionist_doctor_buffer(struct circular_buffer* buffer, int doctor_id, int buffer_size, struct admission* ad){

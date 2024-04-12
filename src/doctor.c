@@ -13,6 +13,7 @@ int execute_doctor(int doctor_id, struct data_container* data, struct communicat
         struct admission* adm;
         doctor_receive_admission(adm, doctor_id, data, comm);
         if (adm->id != -1) {
+            printf("[Doctor %d] Recebi a admissão com o id %d", doctor_id, adm->id);
             doctor_process_admission(adm, doctor_id, data); 
         }
     }

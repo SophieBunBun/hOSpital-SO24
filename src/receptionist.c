@@ -15,6 +15,7 @@ int execute_receptionist(int receptionist_id, struct data_container* data, struc
         struct admission ad;
         receptionist_receive_admission(&ad, data, comm);
         if (ad.id != -1) {
+            printf("[Receptionist %d] Recebi a admissão com o id %d", receptionist_id, ad.id);
             receptionist_process_admission(&ad, receptionist_id, data);
             receptionist_send_admission(&ad, data, comm);
             admissions_processed++;
@@ -26,7 +27,6 @@ int execute_receptionist(int receptionist_id, struct data_container* data, struc
 void receptionist_receive_admission(struct admission* ad, struct data_container* data, struct communication* comm) {
     if (*(data->terminate) == 0) {
         read_patient_receptionist_buffer(comm->main_patient, data->buffers_size, ad);
-        printf("%d", ad->id);
     }
 }
 

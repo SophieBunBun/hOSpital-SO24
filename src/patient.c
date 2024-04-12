@@ -11,7 +11,8 @@ int execute_patient(int patient_id, struct data_container* data, struct communic
     while(*(data->terminate) == 0) {
         struct admission* ad;
         patient_receive_admission(ad, patient_id, data, comm);
-        if(patient_id != -1) {
+        if(ad->id != -1) {
+            printf("[Patient %d] Recebi a admissão com o id %d", patient_id, ad->id);
             patient_process_admission(ad, patient_id, data);
         }
     }
