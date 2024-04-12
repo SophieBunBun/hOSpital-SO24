@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../include/receptionist.h"
-#include "memory.c"
 
 int execute_receptionist(int receptionist_id, struct data_container* data, struct communication* comm){
     int admissions_processed = 0;
