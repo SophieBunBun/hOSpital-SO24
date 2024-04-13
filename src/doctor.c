@@ -36,14 +36,13 @@ void doctor_receive_admission(struct admission* ad, int doctor_id, struct data_c
 */
 
 void doctor_process_admission(struct admission* ad, int doctor_id, struct data_container* data){
-    if (ad->id <= data->max_ads){
+    if (ad->id > data->max_ads){
         ad->status = 'A';
         ad->receiving_doctor = doctor_id;
 
         (data->doctor_stats)[doctor_id] += 1;
-        (data->results)[ad->id] = *ad;
-        data->results = data->results + (sizeof(struct admission));
     } else {
         ad->status = 'N';
     }
+    (data->results)[ad->id] = *ad;
 }

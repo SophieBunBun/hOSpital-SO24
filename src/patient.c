@@ -36,7 +36,6 @@ void patient_process_admission(struct admission* ad, int patient_id, struct data
 
         (data -> patient_stats)[patient_id] += 1;
         (data->results)[ad->id] = *ad;
-        data -> results = data->results + (sizeof(struct admission)); // leaving space for the next admission
     }
 }
 
