@@ -105,7 +105,7 @@ void user_interaction(struct data_container* data, struct communication* comm) {
             wait_processes(data);
         }*/
         
-        sleep(1);
+        sleep(0.2);
         printf("\nComando: ");
         scanf("%s", command);
         if (strcmp(command, "ad") == 0) {
