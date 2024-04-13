@@ -29,13 +29,23 @@ void doctor_receive_admission(struct admission* ad, int doctor_id, struct data_c
     }
 }
 
+/* Função que processa uma admissão, alterando o seu campo receiving_doctor para o id
+* passado como argumento, alterando o estado da mesma para 'A' e 
+* incrementando o contador de consultas no data_container ou para 'N'. 
+* Atualiza também a admissão na estrutura data.
+*/
+
 void doctor_process_admission(struct admission* ad, int doctor_id, struct data_container* data){
-    
     if (ad->id <= data->max_ads){
+        ad->status = 'A';
+        ad->receiving_doctor = doctor_id;
+
+        (data->doctor_stats)[doctor_id] += 1;
+        *(data->results) = *ad;
+        data->results = data->results + (sizeof(struct admission));
+        return;
+    } else {
         ad->status = 'N';
-    }
-    
-    *(data->results) = *ad;
-    (data->doctor_stats)[doctor_id] += 1;
-    data->results = data->results + (sizeof(struct admission));
+        return;
+    }   
 }

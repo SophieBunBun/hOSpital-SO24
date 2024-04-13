@@ -15,7 +15,7 @@ int execute_receptionist(int receptionist_id, struct data_container* data, struc
         struct admission ad;
         receptionist_receive_admission(&ad, data, comm);
         if (ad.id != -1) {
-            fprintf(stderr, "[Receptionist %d] Recebi a admissão com o id %d\n", receptionist_id, ad.id);
+            // fprintf(stderr, "[Receptionist %d] Recebi a admissão com o id %d\n", receptionist_id, ad.id);
             receptionist_process_admission(&ad, receptionist_id, data);
             receptionist_send_admission(&ad, data, comm);
         }
@@ -33,7 +33,10 @@ void receptionist_process_admission(struct admission* ad, int receptionist_id, s
     if (ad->id <= data->max_ads){
         ad->receiving_receptionist = receptionist_id;
         ad->status = 'R';
+
         (data->receptionist_stats)[receptionist_id] += 1;
+        *(data->results) = *ad;
+        data->results = data->results + (sizeof(struct admission));
     }
 }
 

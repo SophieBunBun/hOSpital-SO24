@@ -20,7 +20,7 @@ int execute_patient(int patient_id, struct data_container* data, struct communic
             patient_send_admission(ad, data, comm);
         }
     }
-    return ((data -> patient_stats)[patient_id]); //patient_stats was a pointer, needs to be de-referenced then added
+    return ((data -> patient_stats)[patient_id]);
 }
 
 void patient_receive_admission(struct admission* ad, int patient_id, struct data_container* data, struct communication* comm) {

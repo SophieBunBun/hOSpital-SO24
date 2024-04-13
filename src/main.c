@@ -106,6 +106,8 @@ void user_interaction(struct data_container* data, struct communication* comm) {
             create_request(&ad_counter, data, comm);
         } else if (strcmp(command, "info") == 0) {
             read_info(data);
+        } else if (strcmp(command, "status") == 0) {
+            print_status(data);
         } else if (strcmp(command, "help") == 0) {
             printf("Comandos disponíveis:\n");
             printf("  - ad paciente médico: Cria uma nova admissão\n");
@@ -124,9 +126,12 @@ void user_interaction(struct data_container* data, struct communication* comm) {
 void create_request(int* ad_counter, struct data_container* data, struct communication* comm) {
 
     int patient_id, doctor_id;
-
-    printf("Digite o ID do paciente e o ID do médico: ");
     scanf("%d %d", &patient_id, &doctor_id);
+
+    if (patient_id == NULL || doctor_id == NULL) {
+        printf("Digite o ID do paciente e o ID do médico: ");
+        scanf("%d %d", &patient_id, &doctor_id);
+    }
     if (((comm->main_patient->ptrs->in) + 1) % data->buffers_size != (comm->main_patient->ptrs->out)) {
         int admission_id = (*ad_counter)++;
 
@@ -134,10 +139,9 @@ void create_request(int* ad_counter, struct data_container* data, struct communi
         new_admission.id = admission_id;
         new_admission.requesting_patient = patient_id;
         new_admission.requested_doctor = doctor_id;
-        new_admission.status = 'P';
-        
-        write_main_patient_buffer(comm->main_patient, data->buffers_size, &new_admission);
+        new_admission.status = 'M';
 
+        write_main_patient_buffer(comm->main_patient, data->buffers_size, &new_admission);
         printf("Nova admissão criada com ID: %d\n", admission_id);
     } else {
         printf("Erro: Buffer de admissões entre a main e os pacientes está cheio.\n");
@@ -148,23 +152,32 @@ void read_info(struct data_container* data){
 
     int admission_id;
 
-    printf("Digite o ID da admissão a verificar: ");
-    scanf("%d", &admission_id);
+    scanf("%d", &admission_id); // for some unknown reason this works on create_request without sending the scan result as an argument but not read_info
 
-    if(admission_id <= 0 || admission_id > MAX_RESULTS) {
+    if (admission_id == NULL) {
+        printf("Digite o ID do paciente e o ID do médico: ");
+        scanf("%d", &admission_id);
+    }
+
+    if(admission_id < 0 || admission_id >= MAX_RESULTS) {
         printf("Erro: ID de admissão inválido. \n");
+        printf(admission_id);
         return;
     } else {
         struct admission ad = data->results[admission_id];
         
-        printf("Informações da admissão:\n");
-        printf("ID da admissão: %d\n", ad.id);
-        printf("Estado da admissão: %c\n", ad.status);
-        printf("ID do paciente que fez o pedido: %d\n", ad.requesting_patient);
-        printf("ID do médico requisitado: %d\n", ad.requested_doctor);
-        printf("ID do paciente que recebeu a admissão: %d\n", ad.receiving_patient);
-        printf("ID do recepcionista que processou: %d\n", ad.receiving_receptionist);
-        printf("ID do médico que atendeu: %d\n", ad.receiving_doctor);
+        if (ad.status == NULL) {
+            printf("Erro: admissão não iniciada");
+        } else {
+            printf("Informações da admissão:\n");
+            printf("ID da admissão: %d\n", ad.id);
+            printf("Estado da admissão: %c\n", ad.status);
+            printf("ID do paciente que fez o pedido: %d\n", ad.requesting_patient);
+            printf("ID do médico requisitado: %d\n", ad.requested_doctor);
+            printf("ID do paciente que recebeu a admissão: %d\n", ad.receiving_patient);
+            printf("ID do recepcionista que processou: %d\n", ad.receiving_receptionist);
+            printf("ID do médico que atendeu: %d\n", ad.receiving_doctor);
+        }
     }
 }
 
@@ -188,32 +201,23 @@ void print_status(struct data_container* data) {
     printf("Pacientes: %d\n", data->n_patients);
     printf("IDs dos pacientes: ");
     print_array(data->patient_pids, data->n_patients);
-    printf("\n");
     printf("Estatísticas dos pacientes (admissões solicitadas): ");
     print_array(data->patient_stats, data->n_patients);
-    printf("\n");
 
     printf("Rececionistas: %d\n", data->n_receptionists);
     printf("IDs dos rececionistas: ");
     print_array(data->receptionist_pids, data->n_receptionists);
-    printf("\n");
     printf("Estatísticas dos rececionistas (admissões encaminhadas): ");
     print_array(data->receptionist_stats, data->n_receptionists);
-    printf("\n");
 
     printf("Doutores: %d\n", data->n_doctors);
     printf("IDs dos médicos: ");
     print_array(data->doctor_pids, data->n_doctors);
-    printf("\n");
     printf("Estatísticas dos médicos (admissões atentidas): ");
     print_array(data->doctor_stats, data->n_doctors);
-    printf("\n");
-
-
 
     printf("Buffer de admissões:\n");
     print_array(data->results, data->buffers_size);
-    printf("\n");
 }
 
 void end_execution(struct data_container* data, struct communication* comm) {
