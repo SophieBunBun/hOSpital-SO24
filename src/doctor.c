@@ -45,5 +45,5 @@ void doctor_process_admission(struct admission* ad, int doctor_id, struct data_c
         data->results = data->results + (sizeof(struct admission));
     } else {
         ad->status = 'N';
-    }   
+    }
 }

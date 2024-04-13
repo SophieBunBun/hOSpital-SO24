@@ -98,7 +98,14 @@ void user_interaction(struct data_container* data, struct communication* comm) {
 
     printf("Bem-vindo ao hOSpital! Digite 'help' para obter uma lista de comandos.\n");
 
+    //*(data->terminate) = 1;   // comes from previous attempt to make it wait
+
     while (1) {
+        /*while (*(data->terminate) != 1) {    //keeping this here for extra research
+            wait_processes(data);
+        }*/
+        
+        sleep(1);
         printf("\nComando: ");
         scanf("%s", command);
         if (strcmp(command, "ad") == 0) {
@@ -151,12 +158,8 @@ void read_info(struct data_container* data){
 
     int admission_id;
 
-    scanf("%d", &admission_id); // for some unknown reason this works on create_request without sending the scan result as an argument but not read_info
-
-    if (admission_id == NULL) {
-        printf("Digite o ID do paciente e o ID do médico: ");
-        scanf("%d", &admission_id);
-    }
+    printf("Digite o ID da admissão a verificar: ");
+    scanf("%d", &admission_id);
 
     if(admission_id < 0 || admission_id >= MAX_RESULTS) {
         printf("Erro: ID de admissão inválido. \n");
@@ -217,8 +220,7 @@ void print_status(struct data_container* data) {
     printf("results: ");
     print_results(data->results, data->max_ads);
 
-    printf("terminate: %d\n", data->terminate);
-
+    printf("terminate: %d\n", *(data->terminate));
 }
 
 void print_results(struct admission* results, int size) {
