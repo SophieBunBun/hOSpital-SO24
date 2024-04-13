@@ -41,7 +41,7 @@ void doctor_process_admission(struct admission* ad, int doctor_id, struct data_c
         ad->receiving_doctor = doctor_id;
 
         (data->doctor_stats)[doctor_id] += 1;
-        *(data->results) = *ad;
+        (data->results)[ad->id] = *ad;
         data->results = data->results + (sizeof(struct admission));
     } else {
         ad->status = 'N';
