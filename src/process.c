@@ -54,5 +54,6 @@ int launch_doctor(int doctor_id, struct data_container* data, struct communicati
 int wait_process(int process_id) {
     int status;
     waitpid(process_id, &status, WNOHANG);
+    printf("\nawaiting process %d\n", &process_id);
     return status;
 }

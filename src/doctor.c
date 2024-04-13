@@ -17,7 +17,7 @@ int execute_doctor(int doctor_id, struct data_container* data, struct communicat
         doctor_receive_admission(adm, doctor_id, data, comm);
         if (adm->id != -1) {
             fprintf(stderr, "[Doctor %d] Recebi a admissão com o id %d\n", doctor_id, adm->id);
-            doctor_process_admission(adm, doctor_id, data); 
+            doctor_process_admission(adm, doctor_id, data);
         }
     }
     return (data->doctor_stats)[doctor_id];
@@ -43,9 +43,7 @@ void doctor_process_admission(struct admission* ad, int doctor_id, struct data_c
         (data->doctor_stats)[doctor_id] += 1;
         *(data->results) = *ad;
         data->results = data->results + (sizeof(struct admission));
-        return;
     } else {
         ad->status = 'N';
-        return;
     }   
 }

@@ -102,7 +102,6 @@ void user_interaction(struct data_container* data, struct communication* comm) {
         printf("\nComando: ");
         scanf("%s", command);
         if (strcmp(command, "ad") == 0) {
-            int patient_id, doctor_id;
             create_request(&ad_counter, data, comm);
         } else if (strcmp(command, "info") == 0) {
             read_info(data);
