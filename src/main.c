@@ -197,7 +197,7 @@ void print_status(struct data_container* data) {
     printf("buffers_size: %d\n", data->buffers_size);
 
     printf("n_patients: %d\n", data->n_patients);
-    printf("n_receptionists: %d\n"), data->n_receptionists;
+    printf("n_receptionists: %d\n", data->n_receptionists);
     printf("n_doctors: %d\n", data->n_doctors);
 
     printf("patient_pids: ");
