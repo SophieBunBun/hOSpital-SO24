@@ -217,8 +217,7 @@ void print_status(struct data_container* data) {
     printf("results: ");
     print_results(data->results, data->max_ads);
 
-    printf("terminate: ");
-    print_array(data->terminate, data->buffers_size);
+    printf("terminate: %d\n", data->terminate);
 
 }
 
@@ -231,10 +230,6 @@ void print_results(struct admission* results, int size) {
         results[i].receiving_receptionist, results[i].receiving_doctor);
     }
     printf("]\n");
-
-	int id;	int requesting_patient;	int requested_doctor; char status; int receiving_patient; int receiving_receptionist; int receiving_doctor;
-
-
 }
 
 void end_execution(struct data_container* data, struct communication* comm) {
