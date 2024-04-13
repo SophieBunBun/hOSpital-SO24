@@ -192,31 +192,49 @@ void print_array(int* array, int size) {
 }
 
 void print_status(struct data_container* data) {
+    
+    printf("max_ads: %d\n", data->max_ads);
+    printf("buffers_size: %d\n", data->buffers_size);
 
-    printf("Estado do data_container:\n");
-    printf("Flag de término: %d\n", data->terminate);
-    printf("Número de resultados: %d\n", data->buffers_size);
+    printf("n_patients: %d\n", data->n_patients);
+    printf("n_receptionists: %d\n"), data->n_receptionists;
+    printf("n_doctors: %d\n", data->n_doctors);
 
-    printf("Pacientes: %d\n", data->n_patients);
-    printf("IDs dos pacientes: ");
+    printf("patient_pids: ");
     print_array(data->patient_pids, data->n_patients);
-    printf("Estatísticas dos pacientes (admissões solicitadas): ");
-    print_array(data->patient_stats, data->n_patients);
-
-    printf("Rececionistas: %d\n", data->n_receptionists);
-    printf("IDs dos rececionistas: ");
+    printf("receptionist_pids: ");
     print_array(data->receptionist_pids, data->n_receptionists);
-    printf("Estatísticas dos rececionistas (admissões encaminhadas): ");
-    print_array(data->receptionist_stats, data->n_receptionists);
-
-    printf("Doutores: %d\n", data->n_doctors);
-    printf("IDs dos médicos: ");
+    printf("doctor_pids: ");
     print_array(data->doctor_pids, data->n_doctors);
-    printf("Estatísticas dos médicos (admissões atentidas): ");
+
+    printf("patient_stats: ");
+    print_array(data->patient_stats, data->n_patients);
+    printf("receptionist_stats: ");
+    print_array(data->receptionist_stats, data->n_receptionists);
+    printf("doctor_stats: ");
     print_array(data->doctor_stats, data->n_doctors);
 
-    printf("Buffer de admissões:\n");
-    print_array(data->results, data->buffers_size);
+    printf("results: ");
+    print_results(data->results, data->max_ads);
+
+    printf("terminate: ");
+    print_array(data->terminate, data->buffers_size);
+
+}
+
+void print_results(struct admission* results, int size) {
+    printf("[\n");
+    for (int i = 0; i < size; ++i) {
+        printf("[%d, %d, %d, %c, %d, %d, %d], \n", results[i].id,
+        results[i].requesting_patient, results[i].requested_doctor,
+        results[i].status, results[i].receiving_patient,
+        results[i].receiving_receptionist, results[i].receiving_doctor);
+    }
+    printf("]\n");
+
+	int id;	int requesting_patient;	int requested_doctor; char status; int receiving_patient; int receiving_receptionist; int receiving_doctor;
+
+
 }
 
 void end_execution(struct data_container* data, struct communication* comm) {
