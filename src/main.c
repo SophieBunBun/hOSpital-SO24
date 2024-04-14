@@ -132,13 +132,9 @@ void user_interaction(struct data_container* data, struct communication* comm) {
 
 void create_request(int* ad_counter, struct data_container* data, struct communication* comm) {
 
-    int patient_id, doctor_id;
+    int patient_id = 0, doctor_id = 0;
     scanf("%d %d", &patient_id, &doctor_id);
 
-    if (patient_id == NULL || doctor_id == NULL) {
-        printf("Digite o ID do paciente e o ID do médico: ");
-        scanf("%d %d", &patient_id, &doctor_id);
-    }
     if (((comm->main_patient->ptrs->in) + 1) % data->buffers_size != (comm->main_patient->ptrs->out)) {
         int admission_id = (*ad_counter)++;
 
