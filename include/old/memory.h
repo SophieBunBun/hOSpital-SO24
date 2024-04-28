@@ -46,11 +46,6 @@ struct admission {
 	int receiving_patient;		//id do paciente que recebeu a admissão
 	int receiving_receptionist;	//id do rececionista que realizou a admissão
 	int receiving_doctor;		//id do médico que realizou a consulta
-
-	struct timespec create_time; //quando a admissão foi criada
-	struct timespec patient_time; //quando o paciente recebeu a admissão
-	struct timespec receptionist_time; //quando o rececionista recebeu a admissão
-	struct timespec doctor_time; //quando o médico recebeu a admissão
 };
 
 //estrutura que agrega os shared memory buffers necessários para comunicação entre processos
@@ -63,7 +58,7 @@ struct communication {
 /* Função que reserva uma zona de memória partilhada com tamanho indicado
 * por size e nome name, preenche essa zona de memória com o valor 0, e 
 * retorna um apontador para a mesma. Pode concatenar o resultado da função
-* getpid() a name, para tornar o nome único para o processo.
+* getuid() a name, para tornar o nome único para o processo.
 */
 void* create_shared_memory(char* name, int size);
 
