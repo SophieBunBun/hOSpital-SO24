@@ -1,4 +1,5 @@
 
+char* get_timestamp(struct timespec* ts);
 
 void register_creation_time(struct admission* ad);
 
