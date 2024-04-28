@@ -13,6 +13,8 @@
         "doctor.h": "c",
         "receptionist.h": "c",
         "process.h": "c",
-        "time.h": "c"
+        "time.h": "c",
+        "synchronization.h": "c",
+        "hospsignal.h": "c"
     }
 }

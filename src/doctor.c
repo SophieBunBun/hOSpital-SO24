@@ -8,13 +8,14 @@
 #include "../include/doctor.h"
 #include "../include/synchronization.h"
 #include "../include/hosptime.h"
+#include "../include/hospsignal.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 int execute_doctor(int doctor_id, struct data_container* data, struct communication* comm, struct semaphores* sems){
-
+    sigint_child_setup();
     while (*(data->terminate) != 1){
         struct admission* adm;
         doctor_receive_admission(adm, doctor_id, data, comm, sems);
@@ -34,8 +35,6 @@ void doctor_receive_admission(struct admission* ad, int doctor_id, struct data_c
 
 void doctor_process_admission(struct admission* ad, int doctor_id, struct data_container* data, struct semaphores* sems){
     if (ad->id != -1){
-        fprintf(stderr, "[Doctor %d] Recebi a admissão com o id %d\n", doctor_id, ad->id);
-
         if (ad->id > data->max_ads){
         ad->status = 'A';
         } else {

@@ -8,12 +8,14 @@
 #include "../include/receptionist.h"
 #include "../include/synchronization.h"
 #include "../include/hosptime.h"
+#include "../include/hospsignal.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 int execute_receptionist(int receptionist_id, struct data_container* data, struct communication* comm, struct semaphores* sems){
+    sigint_child_setup();
     while (*(data->terminate) != 1) {
         struct admission ad;
         receptionist_receive_admission(&ad, data, comm, sems);
@@ -34,8 +36,6 @@ void receptionist_receive_admission(struct admission* ad, struct data_container*
 void receptionist_process_admission(struct admission* ad, int receptionist_id, struct data_container* data, struct semaphores* sems) {
     
     if (ad->id != -1 && ad->id <= data->max_ads){
-        fprintf(stderr, "[Receptionist %d] Recebi a admissão com o id %d\n", receptionist_id, ad->id);
-
         ad->receiving_receptionist = receptionist_id;
         ad->status = 'R';
 

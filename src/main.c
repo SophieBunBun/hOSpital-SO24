@@ -12,8 +12,7 @@
 #include "../include/memory.h"
 #include "../include/process.h"
 #include "../include/main.h"
-
-
+#include "../include/hospsignal.h"
 
 int main(int argc, char *argv[]) {
     //init data structures
@@ -26,6 +25,11 @@ int main(int argc, char *argv[]) {
     main_args(argc, argv, data);
     allocate_dynamic_memory_buffers(data);
     create_shared_memory_buffers(data, comm);
+
+    setup_signal_data(end_execution, data, comm, sems);
+    sigint_main_setup();
+    start_alarm(alarm_time);
+
     launch_processes(data, comm);
     user_interaction(data, comm);
 }
