@@ -10,35 +10,40 @@
 #include <stdlib.h>
 #include <string.h>
 
-int execute_patient(int patient_id, struct data_container* data, struct communication* comm) {
+int execute_patient(int patient_id, struct data_container* data, struct communication* comm, struct semaphores* sems) {
     while(*(data->terminate) != 1) {
         struct admission* ad;
-        patient_receive_admission(ad, patient_id, data, comm);
-        if(ad->id != -1) {
-            fprintf(stderr, "[Patient %d] Recebi a admissão com o id %d\n", patient_id, ad->id);
-            patient_process_admission(ad, patient_id, data);
-            patient_send_admission(ad, data, comm);
-        }
+        patient_receive_admission(ad, patient_id, data, comm, sems);
+        patient_process_admission(ad, patient_id, data, sems);
+        patient_send_admission(ad, data, comm, sems);
     }
     return ((data -> patient_stats)[patient_id]);
 }
 
-void patient_receive_admission(struct admission* ad, int patient_id, struct data_container* data, struct communication* comm) {
+void patient_receive_admission(struct admission* ad, int patient_id, struct data_container* data, struct communication* comm, struct semaphores* sems) {
     if(*(data->terminate) != 1) {
+        consume_begin(sems->main_patient);
         read_main_patient_buffer(comm->main_patient, patient_id, data->buffers_size, ad);
     }
 }
 
-void patient_process_admission(struct admission* ad, int patient_id, struct data_container* data) {
-    if (ad->id <= data->max_ads){
+void patient_process_admission(struct admission* ad, int patient_id, struct data_container* data, struct semaphores* sems) {
+    if (ad->id != -1 && ad->id <= data->max_ads){
+        fprintf(stderr, "[Patient %d] Recebi a admissão com o id %d\n", patient_id, ad->id);
+
         ad -> receiving_patient = patient_id;
         ad -> status = 'P';
 
         (data -> patient_stats)[patient_id] += 1;
         (data->results)[ad->id] = *ad;
     }
+    consume_end(sems->main_patient);
 }
 
-void patient_send_admission(struct admission* ad, struct data_container* data, struct communication* comm) {
-    write_patient_receptionist_buffer(comm->patient_receptionist, data->buffers_size, ad);
+void patient_send_admission(struct admission* ad, struct data_container* data, struct communication* comm, struct semaphores* sems) {
+    if (ad->id != -1){
+        produce_begin(sems->patient_receptionist);
+        write_patient_receptionist_buffer(comm->patient_receptionist, data->buffers_size, ad);
+        produce_end(sems->patient_receptionist);
+    }
 }
