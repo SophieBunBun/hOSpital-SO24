@@ -19,6 +19,8 @@
 
 #define MAX_RESULTS 100		//constante usada para limitar tamanho de buffer de resultados
 
+#include <time.h>
+
 struct pointers { 																					
 	int in;  																						
 	int out; 																						

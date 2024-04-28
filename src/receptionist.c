@@ -5,10 +5,13 @@
 * Nuno Graxinha fc59855
 */
 
+#include "../include/receptionist.h"
+#include "../include/synchronization.h"
+#include "../include/hosptime.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/receptionist.h"
 
 int execute_receptionist(int receptionist_id, struct data_container* data, struct communication* comm, struct semaphores* sems){
     while (*(data->terminate) != 1) {
@@ -24,6 +27,7 @@ void receptionist_receive_admission(struct admission* ad, struct data_container*
     if (*(data->terminate) != 1) {
         consume_begin(sems->patient_receptionist);
         read_patient_receptionist_buffer(comm->patient_receptionist, data->buffers_size, ad);
+        register_receptionist_time(ad);
     }
 }
 

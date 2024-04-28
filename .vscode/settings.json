@@ -12,6 +12,7 @@
         "patient.h": "c",
         "doctor.h": "c",
         "receptionist.h": "c",
-        "process.h": "c"
+        "process.h": "c",
+        "time.h": "c"
     }
 }

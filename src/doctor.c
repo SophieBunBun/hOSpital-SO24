@@ -7,6 +7,8 @@
 
 #include "../include/doctor.h"
 #include "../include/synchronization.h"
+#include "../include/hosptime.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,6 +27,8 @@ void doctor_receive_admission(struct admission* ad, int doctor_id, struct data_c
     if (*(data->terminate) != 1){
         consume_begin(sems->receptionist_doctor);
         read_receptionist_doctor_buffer(comm->receptionist_doctor, doctor_id, data->buffers_size, ad);
+        register_receptionist_time(ad);
+        register_doctor_time(ad);
     }
 }
 
