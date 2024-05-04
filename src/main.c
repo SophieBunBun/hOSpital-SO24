@@ -13,6 +13,9 @@
 #include "../include/process.h"
 #include "../include/main.h"
 #include "../include/hospsignal.h"
+#include "../include/configuration.h"
+
+struct config* config;
 
 int main(int argc, char *argv[]) {
     //init data structures
@@ -21,6 +24,8 @@ int main(int argc, char *argv[]) {
     comm->main_patient = allocate_dynamic_memory(sizeof(struct circular_buffer));
     comm->patient_receptionist = allocate_dynamic_memory(sizeof(struct rnd_access_buffer));
     comm->receptionist_doctor = allocate_dynamic_memory(sizeof(struct circular_buffer));
+    config = allocate_dynamic_memory(sizeof(struct config));
+    
     //execute main code
     main_args(argc, argv, data);
     allocate_dynamic_memory_buffers(data);
@@ -28,24 +33,35 @@ int main(int argc, char *argv[]) {
 
     setup_signal_data(end_execution, data, comm, sems);
     sigint_main_setup();
-    start_alarm(alarm_time);
+    start_alarm(config->alarm_time);
 
     launch_processes(data, comm);
     user_interaction(data, comm);
 }
 
 void main_args(int argc, char* argv[], struct data_container* data) {
-    if (argc != 6) {
-        printf("Uso: ./hospital max_ads buffers_size n_patients n_receptionists n_doctors\n");
+    if (argc != 2) {
+        printf("Uso: ./hOSpital inputFile\n");
         exit(EXIT_FAILURE);
     }
     
-    data->max_ads = atoi(argv[1]);
-    data->buffers_size = atoi(argv[2]);
-    data->n_patients = atoi(argv[3]);
-    data->n_receptionists = atoi(argv[4]);
-    data->n_doctors = atoi(argv[5]);
-    
+    /**
+     * TODO: find some way to add things to config without doing a hack
+     * 
+     * Despite a lot of its data being made redundant by data,
+     * config is necessary because of alarm_time, log_filename and statistics_filename;
+     * if not for config, we would still need some way to store these
+     * 
+     * We cannot change main.h to make main_args include that as an argument, probably for security reasons.
+     * 
+     * The way I implemented it was by creating config outside of main and then having main initialize it
+     * so other functions could call it without altering main.h; this is a hack, a band-aid, a bad practice to get things to work
+    */
+
+    FILE *fptr = read_file(argv[1]);
+    add_to_config(fptr, config);
+    fclose(fptr);
+    add_to_data(config, data);
 }   
     
 void allocate_dynamic_memory_buffers(struct data_container* data) {

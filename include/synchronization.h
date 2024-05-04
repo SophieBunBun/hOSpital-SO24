@@ -1,3 +1,7 @@
+/**
+ * TODO: insert documentation
+ */
+
 #ifndef SYNCHRONIZATION_H_GUARD
 #define SYNCHRONIZATION_H_GUARD
 

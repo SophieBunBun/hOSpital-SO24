@@ -12,16 +12,22 @@ BIN_dir = bin
 
 #-----------------------------------------------------------------------------------
 # I want to make this dynamic instead of having to rely on actual files....
-OBJECTOS = main.o doctor.o memory.o patient.o receptionist.o process.o
+OBJECTOS = configuration.o main.o hospsignal.o hosptime.o log.o synchronization.o doctor.o memory.o patient.o receptionist.o process.o
 
+configuration.o =
 main.o =
+hospsignal.o =
+hosptime.o =
+log.o =
+synchronization.o =
 doctor.o = 
 memory.o = 
 patient.o = 
 process.o =
+
 #-----------------------------------------------------------------------------------
 # Will change the name of the output file!
-FILENAME = out
+FILENAME = hOSpital
 #-----------------------------------------------------------------------------------
 CC = gcc # Compiler; doesn't HAVE to be like this, but it's standard procedure
 CFLAGS = -w	# flags; always good to know what we want for the compiler, Wall shows all warnings
