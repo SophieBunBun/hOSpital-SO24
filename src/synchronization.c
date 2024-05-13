@@ -7,7 +7,7 @@
 */
 
 #include "../include/synchronization.h"
-#include <bits/fcntl-linux.h>
+#include <fcntl.h>
 
 sem_t * semaphore_create(char* name, int value){
     return sem_open(name, O_CREAT, value);

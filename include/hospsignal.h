@@ -5,13 +5,11 @@
 #ifndef HOSPSIG_GUARD
 #define HOSPSIG_GUARD
 
-/**
- * TODO: insert includes if any
-*/
+#include "../include/hospsignal.h"
+#include "../include/memory.h"
+#include "../include/main.h"
 
-
-void setup_signal_data(void (*func_in)(struct data_container*, struct communication*, struct semaphores*),
-    struct data_container* data_in, struct communication* comm_in, struct semaphores* sems_in);
+void setup_signal_data(void (*func_in)(struct data_container*, struct communication*, struct semaphores*), struct data_container* data_in, struct communication* comm_in, struct semaphores* sems_in);
 
 void sigint_main_setup();
 

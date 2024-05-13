@@ -5,9 +5,13 @@
 #ifndef HOSPTIME_GUARD
 #define HOSPTIME_GUARD
 
-/**
- * TODO: insert includes if any
-*/
+#include "../include/hosptime.h"
+#include "../include/memory.h"
+
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <time.h>
 
 char* get_timestamp(struct timespec* ts);
 

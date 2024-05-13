@@ -16,6 +16,12 @@
         "time.h": "c",
         "synchronization.h": "c",
         "hospsignal.h": "c",
-        "stats.h": "c"
+        "stats.h": "c",
+        "hosptime.h": "c",
+        "configuration.h": "c",
+        "semaphore.h": "c",
+        "struct_timespec.h": "c",
+        "types.h": "c",
+        "unistd.h": "c"
     }
 }

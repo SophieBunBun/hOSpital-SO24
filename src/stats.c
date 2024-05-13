@@ -9,8 +9,8 @@
 #include "main.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/types.h>
 #include <time.h>
-#include <linux/time.h>
 
 
 void write_statistics_to_file(const char* filnename, struct data_container* data) {

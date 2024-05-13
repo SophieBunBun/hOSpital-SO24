@@ -21,21 +21,6 @@
 struct config* config;
 FILE* log_file;
 
-struct prodcons{
-
-    int full;
-    int empty;
-    int mutex;
-
-};
-
-struct semaphores {
-    struct prodcons* main_patient;
-    struct prodcons* patient_receptionist;
-    struct prodcons* receptionist_doctor;
-};
-
-
 int main(int argc, char *argv[]) {
     //init data structures
     struct data_container* data = allocate_dynamic_memory(sizeof(struct data_container));
@@ -46,10 +31,10 @@ int main(int argc, char *argv[]) {
     config = allocate_dynamic_memory(sizeof(struct config));
     
      // init semaphore data structure
-    struct semaphores* sems = create_dynamic_memory(sizeof(struct semaphores));
-    sems-> main_patient = create_dynamic_memory(sizeof(struct prodcons));
-    sems-> patient_receptionist = create_dynamic_memory(sizeof(struct prodcons));
-    sems-> receptionist_doctor = create_dynamic_memory(sizeof(struct prodcons));
+    struct semaphores* sems = allocate_dynamic_memory(sizeof(struct semaphores));
+    sems-> main_patient = allocate_dynamic_memory(sizeof(struct prodcons));
+    sems-> patient_receptionist = allocate_dynamic_memory(sizeof(struct prodcons));
+    sems-> receptionist_doctor = allocate_dynamic_memory(sizeof(struct prodcons));
 
     //execute main code
     main_args(argc, argv, data);

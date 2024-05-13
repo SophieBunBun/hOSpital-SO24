@@ -13,8 +13,7 @@ struct semaphores* sems;
 
 int alarm_time;
 
-void setup_signal_data(void (*func_in)(struct data_container*, struct communication*, struct semaphores*),
-    struct data_container* data_in, struct communication* comm_in, struct semaphores* sems_in){
+void setup_signal_data(void (*func_in)(struct data_container*, struct communication*, struct semaphores*), struct data_container* data_in, struct communication* comm_in, struct semaphores* sems_in){
 
     end_exec = func_in;
     data = data_in;
