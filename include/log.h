@@ -5,12 +5,12 @@
 #ifndef LOG_GUARD
 #define LOG_GUARD
 
-/**
- * TODO: insert includes if any
-*/
+#include <stdio.h>
 
-char* create_log();
+FILE* open_log(char* filename);
 
-void register_to_log(char* log, char* input);
+void register_to_log(FILE* file, char* input);
+
+void end_log(FILE* file);
 
 #endif

@@ -7,19 +7,21 @@
 #include <time.h>
 #include <linux/time.h>
 
-char* create_log(){
-    char* log = "[Log Start]";
-    return log;
+FILE* create_log(char* filename){
+
+    FILE* file = fopen(filename, "w");
+    fprintf(file, "[Log Start]\n");
+    return file;
 }
 
-char* register_to_log(char* log, char* command){
+void register_to_log(FILE* file, char* command){
 
     struct timespec timesp;
     clock_gettime(CLOCK_REALTIME, &timesp);
     char* timestamp = get_timestamp(&timesp);
+    fprintf(file, "%s %s\n", timestamp, command);
+}
 
-    char* final[strlen(log) + strlen(command) + strlen(timestamp) + 3];
-    sprintf(final, "%s%s %s\n", log, timestamp, command);
-
-    return final;
+void end_log(FILE* file){
+    fclose(file);
 }
