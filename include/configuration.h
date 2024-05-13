@@ -17,9 +17,9 @@
  * Defines added for flexibility in constants and error messages
 */
 #define MAX_FILE_NAME 256
-#define SEARCH_START    "Searching for file!"
-#define FILE_NOT_FOUND  "File does not exist!"
-#define FILE_FOUND      "File successfully read!"
+#define SEARCH_START    "Searching for file!\n"
+#define FILE_NOT_FOUND  "File does not exist!\n"
+#define FILE_FOUND      "File successfully read!\n"
 #define FILE_BAD_FORMAT "File is not in expected format!\n"
 
 struct config {

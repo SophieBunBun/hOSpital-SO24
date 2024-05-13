@@ -23,6 +23,7 @@
         "struct_timespec.h": "c",
         "types.h": "c",
         "unistd.h": "c",
-        "log.h": "c"
+        "log.h": "c",
+        "string": "c"
     }
 }

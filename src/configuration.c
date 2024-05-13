@@ -17,7 +17,9 @@ FILE* read_file(char* filename) {
 }
 
 void add_to_config(FILE* fptr, struct config* confoog) {
+    printf("%s\n", next_line(fptr));
     confoog->max_ads = to_int(next_line(fptr));   // ok but what if it's not an int?
+    printf("Here123\n");
     confoog->buffers_size = to_int(next_line(fptr));
 
     confoog->n_patients = to_int(next_line(fptr));
@@ -31,6 +33,8 @@ void add_to_config(FILE* fptr, struct config* confoog) {
 }
 
 int to_int(char* string) {
+
+    printf("%s\n", string);
     int returnos = atoi(string);    // TODO: change this
     if (returnos == 0) exit_program(FILE_BAD_FORMAT);
     return returnos;
