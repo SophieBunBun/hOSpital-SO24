@@ -12,12 +12,13 @@ BIN_dir = bin
 
 #-----------------------------------------------------------------------------------
 # I want to make this dynamic instead of having to rely on actual files....
-OBJECTOS = configuration.o main.o hospsignal.o hosptime.o log.o synchronization.o doctor.o memory.o patient.o receptionist.o process.o
+OBJECTOS = configuration.o main.o hospsignal.o hosptime.o stats.o log.o synchronization.o doctor.o memory.o patient.o receptionist.o process.o
 
 configuration.o =
 main.o =
 hospsignal.o =
 hosptime.o =
+stats.o =
 log.o =
 synchronization.o =
 doctor.o = 

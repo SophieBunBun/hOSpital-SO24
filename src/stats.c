@@ -4,9 +4,12 @@
 * Joao Dias     fc59854
 * Nuno Graxinha fc59855
 */
-#include "stats.h"
-#include "memory.h"
-#include "main.h"
+
+#define _POSIX_C_SOURCE 199309L
+
+#include "../include/stats.h"
+#include "../include/memory.h"
+#include "../include/main.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>

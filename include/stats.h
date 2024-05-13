@@ -7,10 +7,14 @@
 #ifndef STATS_H
 #define STATS_H
 
+#define _POSIX_C_SOURCE 199309L
+
+#include "../include/memory.h"
+#include "../include/main.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <time.h>
-
 
 // Função para escrever as estatísticas finais no arquivo
 void write_statistics_to_file(const char* filename, struct data_container* data);
