@@ -13,7 +13,7 @@
 #include <linux/time.h>
 
 
-void write_statistics(const char* filnename, struct data_container* data) {
+void write_statistics_to_file(const char* filnename, struct data_container* data) {
 
     FILE* file = fopen(filnename, "w");
     if (file == NULL) {

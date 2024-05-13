@@ -10,6 +10,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <semaphore.h>
+#include "../include/stats.h"
+#include "../include/log.h"
 #include "../include/memory.h"
 #include "../include/process.h"
 #include "../include/main.h"
@@ -17,6 +19,7 @@
 #include "../include/configuration.h"
 
 struct config* config;
+FILE* log_file;
 
 struct prodcons{
 
@@ -56,6 +59,8 @@ int main(int argc, char *argv[]) {
     setup_signal_data(end_execution, data, comm, sems);
     sigint_main_setup();
     start_alarm(config->alarm_time);
+
+    log_file = open_log(config->log_filename);
 
     launch_processes(data, comm, sems);
     user_interaction(data, comm, sems);
@@ -141,23 +146,19 @@ void user_interaction(struct data_container* data, struct communication* comm, s
 
     printf("Bem-vindo ao hOSpital! Digite 'help' para obter uma lista de comandos.\n");
 
-    //*(data->terminate) = 1;   // comes from previous attempt to make it wait
-
     while (1) {
-        /*while (*(data->terminate) != 1) {    //keeping this here for extra research
-            wait_processes(data);
-        }*/
-        
-        sleep(1);
         printf("\nComando: ");
         scanf("%s", command);
         if (strcmp(command, "ad") == 0) {
             create_request(&ad_counter, data, comm, sems);
         } else if (strcmp(command, "info") == 0) {
+            register_to_log(log_file, command);
             read_info(data, sems);
         } else if (strcmp(command, "status") == 0) {
+            register_to_log(log_file, command);
             print_status(data, sems);
         } else if (strcmp(command, "help") == 0) {
+            register_to_log(log_file, command);
             printf("Comandos disponíveis:\n");
             printf("  - ad paciente médico: Cria uma nova admissão\n");
             printf("  - info: Verifica o estado de uma admissão\n");
@@ -176,6 +177,10 @@ void create_request(int* ad_counter, struct data_container* data, struct communi
 
     int patient_id = 0, doctor_id = 0;
     scanf("%d %d", &patient_id, &doctor_id);
+
+    char buffer[32];
+    fprintf(buffer, "ad %d %d", patient_id, doctor_id);
+    register_to_log(log_file, buffer);
 
     sem_wait(&(sems->main_patient->full));
 
@@ -297,6 +302,8 @@ void end_execution(struct data_container* data, struct communication* comm, stru
 
     wait_processes(data);
     write_statistics(data);
+    write_statistics_to_file(config->statistics_filename, data);
+    end_log(log_file);
     destroy_memory_buffers(data, comm);
     destroy_semaphores(sems);
 }

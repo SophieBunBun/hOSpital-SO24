@@ -15,6 +15,7 @@
         "process.h": "c",
         "time.h": "c",
         "synchronization.h": "c",
-        "hospsignal.h": "c"
+        "hospsignal.h": "c",
+        "stats.h": "c"
     }
 }
