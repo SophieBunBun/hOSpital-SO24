@@ -1,7 +1,3 @@
-/**
- * TODO: insert documentation
- */
-
 #ifndef SYNCHRONIZATION_H_GUARD
 #define SYNCHRONIZATION_H_GUARD
 
@@ -20,6 +16,12 @@
 #define STR_SEM_RECEPT_DOCTOR_EMPTY 	"SEM_RECEPT_DOCTOR_EMPTY"
 #define STR_SEM_RECEPT_DOCTOR_MUTEX 	"SEM_RECEPT_DOCTOR_MUTEX"
 
+#define STR_SEM_PATIENT_STATS_MUTEX		"SEM_PATIENT_STATS_MUTEX" 	// V3
+#define STR_SEM_RECEPT_STATS_MUTEX		"SEM_RECEPT_STATS_MUTEX" 	// V3
+#define STR_SEM_DOCTOR_STATS_MUTEX		"SEM_DOCTOR_STATS_MUTEX" 	// V3
+#define STR_SEM_RESULTS_MUTEX			"SEM_RESULTS_MUTEX" 		// V3
+#define STR_SEM_TERMINATE_MUTEX			"SEM_TERMINATE_MUTEX" 		// V3
+
 //estrutura de 3 semáforos utilizada no modelo produtor/consumidor
 struct prodcons {
 	sem_t *full, *empty, *mutex;
@@ -30,6 +32,11 @@ struct semaphores {
 	struct prodcons *main_patient;	        // semáforos para acesso ao buffer entre a main e os pacientes
 	struct prodcons *patient_receptionist;  // semáforos para acesso ao buffer entre os pacientes e os rececionistas
 	struct prodcons *receptionist_doctor; 	// semáforos para acesso ao buffer entre os rececionistas e os médicos
+	sem_t *patient_stats_mutex;				// V3
+	sem_t *receptionist_stats_mutex;		// V3
+	sem_t *doctor_stats_mutex;				// V3
+	sem_t *results_mutex;					// V3
+	sem_t *terminate_mutex;					// V3
 };
 
 /* Função que cria um novo semáforo com nome name e valor inicial igual a

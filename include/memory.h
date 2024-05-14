@@ -5,6 +5,8 @@
 #ifndef MEMORY_H_GUARD
 #define MEMORY_H_GUARD
 
+#include <time.h>	// V2
+
 #define STR_SHM_MAIN_PATIENT_PTR 				"SHM_MAIN_PATIENT_PTR"
 #define STR_SHM_MAIN_PATIENT_BUFFER 			"SHM_MAIN_PATIENT_BUFFER"
 #define STR_SHM_PATIENT_RECEPT_PTR 				"SHM_PATIENT_RECEPT_PTR"
@@ -18,9 +20,6 @@
 #define STR_SHM_TERMINATE						"SHM_TERMINATE"
 
 #define MAX_RESULTS 100		//constante usada para limitar tamanho de buffer de resultados
-
-#include <sys/types.h>
-#include <time.h>
 
 struct pointers { 																					
 	int in;  																						
