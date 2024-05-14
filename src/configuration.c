@@ -93,7 +93,7 @@ void add_to_data(struct config* confoog, struct data_container* data) {
     data->buffers_size = confoog->buffers_size;
 
     data->n_patients = confoog->n_patients;
-    data->n_patients = confoog->n_receptionists;
+    data->n_receptionists = confoog->n_receptionists;
     data->n_doctors = confoog->n_doctors;
 }
 
