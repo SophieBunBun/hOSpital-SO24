@@ -24,7 +24,8 @@ void register_to_log(FILE* file, char* command){
 }
 
 void end_log(FILE* file){
-    // check if fclose is even possible
-    // TODO: research this
-    fclose(file);
+    if (file != NULL){
+        printf("pointer valid\n");
+        fclose(file);
+    }
 }

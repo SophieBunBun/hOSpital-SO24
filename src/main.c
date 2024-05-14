@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <semaphore.h>
 #include "../include/stats.h"
 #include "../include/log.h"
 #include "../include/memory.h"
@@ -17,6 +16,7 @@
 #include "../include/main.h"
 #include "../include/hospsignal.h"
 #include "../include/configuration.h"
+#include "../include/synchronization.h"
 
 struct config* config;  // TODO: use updated header files
 FILE *log_file;
@@ -173,9 +173,7 @@ void create_request(int* ad_counter, struct data_container* data, struct communi
     fprintf(buffer, "ad %d %d", patient_id, doctor_id);
     register_to_log(log_file, buffer);
 
-    sem_wait(&(sems->main_patient->full));
-
-    sem_wait(&(sems->main_patient->mutex));
+    produce_begin(sems->main_patient);
 
     if (((comm->main_patient->ptrs->in) + 1) % data->buffers_size != (comm->main_patient->ptrs->out)) {
         int admission_id = (*ad_counter)++;
@@ -192,9 +190,7 @@ void create_request(int* ad_counter, struct data_container* data, struct communi
         printf("Erro: Buffer de admissões entre a main e os pacientes está cheio.\n");
     }
 
-    sem_post(&(sems->main_patient->mutex));
-
-    sem_post(&(sems->main_patient->empty));
+    produce_end(sems->main_patient);
 }
 
 void read_info(struct data_container* data, struct semaphores* sems){
@@ -204,19 +200,12 @@ void read_info(struct data_container* data, struct semaphores* sems){
     printf("Digite o ID da admissão a verificar: ");
     scanf("%d", &admission_id);
 
-    sem_wait(&(sems->main_patient->mutex));
-
     if(admission_id < 0 || admission_id >= MAX_RESULTS) {
         printf("Erro: ID de admissão inválido. \n");
         printf(admission_id);
-
-        sem_post(&(sems->main_patient->mutex));
-        return;
     } else {
         struct admission ad = data->results[admission_id];
 
-        sem_post(&(sems->main_patient->mutex));
-        
         if (ad.status == NULL) {
             printf("Erro: admissão não iniciada");
         } else {
@@ -244,8 +233,6 @@ void print_array(int* array, int size) {
 }
 
 void print_status(struct data_container* data, struct semaphores* sems) {
-    
-    sem_wait(&(sems->main_patient->mutex));
 
     printf("max_ads: %d\n", data->max_ads);
     printf("buffers_size: %d\n", data->buffers_size);
@@ -272,8 +259,6 @@ void print_status(struct data_container* data, struct semaphores* sems) {
     print_results(data->results, data->max_ads);
 
     printf("terminate: %d\n", *(data->terminate));
-
-    sem_post(&(sems->main_patient->mutex));
 }
 
 void print_results(struct admission* results, int size) {
@@ -294,11 +279,8 @@ void end_execution(struct data_container* data, struct communication* comm, stru
     wait_processes(data);
     write_statistics(data);
     write_statistics_to_file(config->statistics_filename, data);
-    printf("\nBefore\n");
-    end_log(log_file);  // TODO: currently crashes HERE
-    printf("\nAfter\n");
-    destroy_memory_buffers(data, comm);
     destroy_semaphores(sems);
+    destroy_memory_buffers(data, comm);
 }
 
 void wait_processes(struct data_container* data) {
@@ -355,40 +337,44 @@ void destroy_memory_buffers(struct data_container* data, struct communication* c
 
 void create_semaphores(struct data_container* data, struct semaphores* sems) {
 
-    sem_init(&(sems->main_patient->full), 0, 0);
-    sem_init(&(sems->patient_receptionist->full), 0, 0);
-    sem_init(&(sems->receptionist_doctor->full), 0, 0);
+    sems->main_patient->full = semaphore_create(STR_SEM_MAIN_PATIENT_FULL, 0);
+    sems->patient_receptionist->full = semaphore_create(STR_SEM_PATIENT_RECEPT_FULL, 0);
+    sems->receptionist_doctor->full = semaphore_create(STR_SEM_RECEPT_DOCTOR_FULL, 0);
 
-    sem_init(&(sems->main_patient->empty), 0, data->buffers_size);
-    sem_init(&(sems->patient_receptionist->empty), 0, data->buffers_size);
-    sem_init(&(sems->receptionist_doctor->empty), 0, data->buffers_size);
-        
-    sem_init(&(sems->main_patient->mutex), 0, 1);
-    sem_init(&(sems->patient_receptionist->mutex), 0, 1);
-    sem_init(&(sems->receptionist_doctor->mutex), 0, 1);
+    sems->main_patient->empty = semaphore_create(STR_SEM_MAIN_PATIENT_EMPTY, data->n_patients);
+    sems->patient_receptionist->empty = semaphore_create(STR_SEM_PATIENT_RECEPT_EMPTY, data->n_patients);
+    sems->receptionist_doctor->empty = semaphore_create(STR_SEM_RECEPT_DOCTOR_EMPTY, data->n_receptionists);
 
+    sems->main_patient->mutex = semaphore_create(STR_SEM_MAIN_PATIENT_MUTEX, 0);
+    sems->patient_receptionist->full = semaphore_create(STR_SEM_PATIENT_RECEPT_MUTEX, 0);
+    sems->receptionist_doctor->full = semaphore_create(STR_SEM_RECEPT_DOCTOR_MUTEX, 0);
 }
 
 void wakeup_processes(struct data_container* data, struct semaphores* sems) {
 
-    sem_post(&(sems->main_patient->full));
-    sem_post(&(sems->patient_receptionist->full));
-    sem_post(&(sems->receptionist_doctor->full));
-
+    for (int i = 0; i < data->n_patients; i++) {
+        produce_end(sems->main_patient);
+    }
+    for (int i = 0; i < data->n_receptionists; i++) {
+        produce_end(sems->patient_receptionist);
+    }
+    for (int i = 0; i < data->n_doctors; i++) {
+        produce_end(sems->receptionist_doctor);
+    }
 }
 
 void destroy_semaphores(struct semaphores* sems) {
 
-    sem_destroy(&(sems->main_patient->full));
-    sem_destroy(&(sems->patient_receptionist->full));
-    sem_destroy(&(sems->receptionist_doctor->full));
+    semaphore_destroy(STR_SEM_MAIN_PATIENT_FULL, sems->main_patient->full);
+    semaphore_destroy(STR_SEM_PATIENT_RECEPT_FULL, sems->patient_receptionist->full);
+    semaphore_destroy(STR_SEM_RECEPT_DOCTOR_FULL, sems->receptionist_doctor->full);
 
-    sem_destroy(&(sems->main_patient->empty));
-    sem_destroy(&(sems->patient_receptionist->empty));
-    sem_destroy(&(sems->receptionist_doctor->empty));
+    semaphore_destroy(STR_SEM_MAIN_PATIENT_EMPTY, sems->main_patient->empty);
+    semaphore_destroy(STR_SEM_PATIENT_RECEPT_EMPTY, sems->patient_receptionist->empty);
+    semaphore_destroy(STR_SEM_RECEPT_DOCTOR_EMPTY, sems->receptionist_doctor->empty);
 
-    sem_destroy(&(sems->main_patient->mutex));
-    sem_destroy(&(sems->patient_receptionist->mutex));
-    sem_destroy(&(sems->receptionist_doctor->mutex));
+    semaphore_destroy(STR_SEM_MAIN_PATIENT_MUTEX, sems->main_patient->mutex);
+    semaphore_destroy(STR_SEM_PATIENT_RECEPT_MUTEX, sems->patient_receptionist->full);
+    semaphore_destroy(STR_SEM_RECEPT_DOCTOR_MUTEX, sems->receptionist_doctor->full);
 
 }
