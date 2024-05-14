@@ -36,19 +36,24 @@ int main(int argc, char *argv[]) {
     sems-> patient_receptionist = allocate_dynamic_memory(sizeof(struct prodcons));
     sems-> receptionist_doctor = allocate_dynamic_memory(sizeof(struct prodcons));
 
-    //execute main code
+    //Get run config
     main_args(argc, argv, data);
+    
+    //Initialize rest of environment
     allocate_dynamic_memory_buffers(data);
     create_shared_memory_buffers(data, comm);
     create_semaphores(data, sems);
     setup_signal_data(end_execution, data, comm, sems);
+
+    //Launch process
+    launch_processes(data, comm, sems);
+
+    //Setting up main environment
+    log_file = open_log(config->log_filename);
     sigint_main_setup();
     start_alarm(config->alarm_time);
 
-    log_file = open_log(config->log_filename);
-
-    launch_processes(data, comm, sems); // TODO: LOG FILE SOMEHOW REPEATS "[Log Start]\n" 11 TIMES
-
+    //Run main loop
     user_interaction(data, comm, sems);
 }
 
@@ -289,7 +294,9 @@ void end_execution(struct data_container* data, struct communication* comm, stru
     wait_processes(data);
     write_statistics(data);
     write_statistics_to_file(config->statistics_filename, data);
+    printf("\nBefore\n");
     end_log(log_file);  // TODO: currently crashes HERE
+    printf("\nAfter\n");
     destroy_memory_buffers(data, comm);
     destroy_semaphores(sems);
 }
