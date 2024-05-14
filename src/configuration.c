@@ -25,11 +25,24 @@ void add_to_config(FILE* fptr, struct config* confoog) {
     confoog->n_receptionists = next_line_int(fptr, thisLine);
     confoog->n_doctors = next_line_int(fptr, thisLine);
 
-    confoog->log_filename = next_line(fptr, thisLine);
-    confoog->statistics_filename = next_line(fptr, thisLine);
+    next_line(fptr, thisLine);
+    copy_string(thisLine, confoog->log_filename);
+    next_line(fptr, thisLine);
+    copy_string(thisLine, confoog->statistics_filename);
 
     confoog->alarm_time = next_line_int(fptr, thisLine);
 }
+
+void copy_string(char* entry, char* exit) {
+    int continuar = 0;
+    for (int i = 0; i < MAX_FILE_NAME && continuar == 0; i++) {
+        exit[i] = entry[i];
+        if (exit[i] == 0x00) {
+            continuar = 1;
+        }
+    }
+}
+
 
 int to_int(char* string) {
     int returnos = string_parser(string);

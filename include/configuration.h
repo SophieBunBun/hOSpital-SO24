@@ -28,8 +28,8 @@ struct config {
     int n_patients;             //nº de pacientes
     int n_receptionists;        //nº de rececionistas
     int n_doctors;              //nº de médicos
-    char* log_filename;         //nome do ficheiro de log
-    char* statistics_filename;  //nome do ficheiro de estatísticas
+    char log_filename[MAX_FILE_NAME];         //nome do ficheiro de log
+    char statistics_filename[MAX_FILE_NAME];  //nome do ficheiro de estatísticas
     int alarm_time;             //temporização para o alarme
 };
 

@@ -10,7 +10,6 @@
 #include <time.h>
 
 FILE* open_log(char* filename){
-
     FILE* file = fopen(filename, "w");
     fprintf(file, "[Log Start]\n");
     return file;

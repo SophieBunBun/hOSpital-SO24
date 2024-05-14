@@ -17,7 +17,7 @@
 #include <time.h>
 
 // Função para escrever as estatísticas finais no arquivo
-void write_statistics_to_file(const char* filename, struct data_container* data);
+void write_statistics_to_file(char* filename, struct data_container* data);
 
 // Função para escrever as estatísticas dos processos (pacientes, recepcionistas e médicos)
 void write_process_statistics(FILE* file, struct data_container* data);

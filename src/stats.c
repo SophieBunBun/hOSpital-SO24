@@ -16,15 +16,14 @@
 #include <time.h>
 
 
-void write_statistics_to_file(const char* filnename, struct data_container* data) {
+void write_statistics_to_file(char* filename, struct data_container* data) {
 
-    FILE* file = fopen(filnename, "w");
+    FILE* file = fopen(filename, "w");
     if (file == NULL) {
         printf("Erro ao abrir o arquivo de estatísticas.\n");
         return;
 
     }
-
     write_process_statistics(file, data);
     write_admission_statistics(file, data);
     

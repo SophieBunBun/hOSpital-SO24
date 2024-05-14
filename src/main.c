@@ -19,7 +19,7 @@
 #include "../include/configuration.h"
 
 struct config* config;
-FILE* log_file;
+FILE *log_file;
 
 int main(int argc, char *argv[]) {
     //init data structures
@@ -46,7 +46,9 @@ int main(int argc, char *argv[]) {
     start_alarm(config->alarm_time);
 
     log_file = open_log(config->log_filename);
-    launch_processes(data, comm, sems);
+
+    launch_processes(data, comm, sems); // TODO: LOG FILE SOMEHOW REPEATS "[Log Start]\n" 11 TIMES
+
     user_interaction(data, comm, sems);
 }
 
@@ -287,7 +289,7 @@ void end_execution(struct data_container* data, struct communication* comm, stru
     wait_processes(data);
     write_statistics(data);
     write_statistics_to_file(config->statistics_filename, data);
-    end_log(log_file);
+    end_log(log_file);  // TODO: currently crashes HERE
     destroy_memory_buffers(data, comm);
     destroy_semaphores(sems);
 }
