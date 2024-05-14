@@ -11,7 +11,7 @@
 
 FILE* open_log(char* filename){
     FILE* file = fopen(filename, "w");
-    fprintf(file, "[Log Start]\n");
+    fprintf(file, "[Log Start] %d\n", getpid());
     return file;
 }
 
@@ -24,5 +24,7 @@ void register_to_log(FILE* file, char* command){
 }
 
 void end_log(FILE* file){
+    // check if fclose is even possible
+    // TODO: research this
     fclose(file);
 }

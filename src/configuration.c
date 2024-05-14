@@ -43,7 +43,7 @@ void copy_string(char* entry, char* exit) {
             continuar = 1;
         }
     }
-    exit[index] = 0x00;
+    exit[index] = 0x00; // AVOIDING BUFFER OVERFLOW VULNERABILITIES!!!
 }
 
 

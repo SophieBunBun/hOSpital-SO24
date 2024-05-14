@@ -18,7 +18,7 @@
 #include "../include/hospsignal.h"
 #include "../include/configuration.h"
 
-struct config* config;
+struct config* config;  // TODO: use updated header files
 FILE *log_file;
 
 int main(int argc, char *argv[]) {
