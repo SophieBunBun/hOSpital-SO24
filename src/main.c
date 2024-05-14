@@ -38,7 +38,6 @@ int main(int argc, char *argv[]) {
 
     //execute main code
     main_args(argc, argv, data);
-    printf("Here\n");
     allocate_dynamic_memory_buffers(data);
     create_shared_memory_buffers(data, comm);
     create_semaphores(data, sems);
@@ -47,8 +46,6 @@ int main(int argc, char *argv[]) {
     start_alarm(config->alarm_time);
 
     log_file = open_log(config->log_filename);
-    printf("Here\n");
-
     launch_processes(data, comm, sems);
     user_interaction(data, comm, sems);
 }
@@ -74,7 +71,6 @@ void main_args(int argc, char* argv[], struct data_container* data) {
 
     FILE *fptr = read_file(argv[1]);
     add_to_config(fptr, config);
-    printf("Here123\n");
     fclose(fptr);
     add_to_data(config, data);
 }   

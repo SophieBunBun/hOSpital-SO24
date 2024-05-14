@@ -17,34 +17,59 @@ FILE* read_file(char* filename) {
 }
 
 void add_to_config(FILE* fptr, struct config* confoog) {
-    printf("%s\n", next_line(fptr));
-    confoog->max_ads = to_int(next_line(fptr));   // ok but what if it's not an int?
-    printf("Here123\n");
-    confoog->buffers_size = to_int(next_line(fptr));
+    char thisLine[MAX_FILE_NAME];
+    confoog->max_ads = next_line_int(fptr, thisLine);   // ok but what if it's not an int?
+    confoog->buffers_size = next_line_int(fptr, thisLine);
 
-    confoog->n_patients = to_int(next_line(fptr));
-    confoog->n_receptionists = to_int(next_line(fptr));
-    confoog->n_doctors = to_int(next_line(fptr));
+    confoog->n_patients = next_line_int(fptr, thisLine);
+    confoog->n_receptionists = next_line_int(fptr, thisLine);
+    confoog->n_doctors = next_line_int(fptr, thisLine);
 
-    confoog->log_filename = next_line(fptr);
-    confoog->statistics_filename = next_line(fptr);
+    confoog->log_filename = next_line(fptr, thisLine);
+    confoog->statistics_filename = next_line(fptr, thisLine);
 
-    confoog->alarm_time = to_int(next_line(fptr));
+    confoog->alarm_time = next_line_int(fptr, thisLine);
 }
 
 int to_int(char* string) {
-
-    printf("%s\n", string);
-    int returnos = atoi(string);    // TODO: change this
+    int returnos = string_parser(string);
     if (returnos == 0) exit_program(FILE_BAD_FORMAT);
     return returnos;
 }
 
-char* next_line (FILE* fptr) {    // I so wanted to call this "tsugi ni omae wa"
-    char thisLine[MAX_FILE_NAME];
-    if( fgets(thisLine, MAX_FILE_NAME, fptr) == 0)
+int string_parser(char* string) {
+    // i'm assuming signed ints because none of the other functions are expecting unsigned stuff
+    // none of our data is ready to be negative anyway but can't rewrite header files to accept unsigned ints
+
+    long deposit = 0;
+    int stop = 0;
+    for(int i = 0; i < 10 && stop == 0; i++) { // make sure it only has 10 cases (otherwise over integer limit)
+        if(is_number(string[i])) {
+            deposit = deposit * 10;
+            deposit = deposit + string[i] - 0x30;
+        } else { stop = 1; }
+    }
+
+    if(deposit > 0x7FFF) return 0;
+
+    return (int) deposit;
+}
+
+int is_number(char chara) {
+    if (chara < 0x40 && chara > 0x29) {
+        return 1;
+    }
+    return 0;
+}
+
+char* next_line (FILE* fptr, char* line) {    // I so wanted to call this "tsugi ni omae wa"
+    if( fgets(line, MAX_FILE_NAME, fptr) == 0)
         exit_program(FILE_BAD_FORMAT);
-    return thisLine;
+    return line;
+}
+
+int next_line_int(FILE* fptr, char* line) {
+    return to_int(next_line(fptr, line));
 }
 
 void add_to_data(struct config* confoog, struct data_container* data) {

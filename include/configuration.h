@@ -54,10 +54,27 @@ void add_to_config(FILE* fptr, struct config* confoog);
 int to_int(char* string);
 
 /**
+ * Returns the int represented in a given string.
+ * If the string has multiple numbers separated by other
+ * characters, only the first will be returned.
+ * If the string starts with a non-number character
+ * (including the negative sign), NULL will be returned.
+ * If the string's first number is too big for a signed int,
+ * NULL will be returned.
+*/
+int string_parser(char* string);
+
+/**
+ * Will check whether a given character is a number.
+ * Return 1 if it is, 0 if it isn't.
+*/
+int is_number(char chara);
+
+/**
  * Returns the next line.
  * If it tries to read a line that does not exist, it will exit the program.
 */
-char* next_line (FILE* fptr);
+char* next_line (FILE* fptr, char* line);
 
 /**
  * Adds the data in the config to the data_container.
