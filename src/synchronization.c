@@ -10,7 +10,7 @@
 #include <fcntl.h>
 
 sem_t * semaphore_create(char* name, int value){
-    return sem_open(name, O_CREAT, value);
+    return sem_open(name, O_CREAT, 0xFFFFFFFF, value);
 }
 
 void semaphore_destroy(char* name, sem_t* semaphore){

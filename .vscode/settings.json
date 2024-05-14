@@ -24,6 +24,7 @@
         "types.h": "c",
         "unistd.h": "c",
         "log.h": "c",
-        "string": "c"
+        "string": "c",
+        "type_traits": "c"
     }
 }

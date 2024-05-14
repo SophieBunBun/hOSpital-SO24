@@ -40,8 +40,8 @@ void patient_process_admission(struct admission* ad, int patient_id, struct data
 
         (data -> patient_stats)[patient_id] += 1;
         (data->results)[ad->id] = *ad;
-        consume_end(sems->main_patient);
     }
+    consume_end(sems->main_patient);
 }
 
 void patient_send_admission(struct admission* ad, struct data_container* data, struct communication* comm, struct semaphores* sems) {

@@ -174,7 +174,7 @@ void create_request(int* ad_counter, struct data_container* data, struct communi
     register_to_log(log_file, buffer);
 
     produce_begin(sems->main_patient);
-
+    
     if (((comm->main_patient->ptrs->in) + 1) % data->buffers_size != (comm->main_patient->ptrs->out)) {
         int admission_id = (*ad_counter)++;
 
@@ -337,17 +337,28 @@ void destroy_memory_buffers(struct data_container* data, struct communication* c
 
 void create_semaphores(struct data_container* data, struct semaphores* sems) {
 
-    sems->main_patient->full = semaphore_create(STR_SEM_MAIN_PATIENT_FULL, 0);
-    sems->patient_receptionist->full = semaphore_create(STR_SEM_PATIENT_RECEPT_FULL, 0);
-    sems->receptionist_doctor->full = semaphore_create(STR_SEM_RECEPT_DOCTOR_FULL, 0);
+    char* buffer[25]; 
 
-    sems->main_patient->empty = semaphore_create(STR_SEM_MAIN_PATIENT_EMPTY, data->n_patients);
-    sems->patient_receptionist->empty = semaphore_create(STR_SEM_PATIENT_RECEPT_EMPTY, data->n_receptionists);
-    sems->receptionist_doctor->empty = semaphore_create(STR_SEM_RECEPT_DOCTOR_EMPTY, data->n_doctors);
+    sprintf(buffer, "%s %d", STR_SEM_MAIN_PATIENT_FULL, getpid());
+    sems->main_patient->full = semaphore_create(buffer, 0);
+    sprintf(buffer, "%s %d", STR_SEM_PATIENT_RECEPT_FULL, getpid());
+    sems->patient_receptionist->full = semaphore_create(buffer, 0);
+    sprintf(buffer, "%s %d", STR_SEM_RECEPT_DOCTOR_FULL, getpid());
+    sems->receptionist_doctor->full = semaphore_create(buffer, 0);
 
-    sems->main_patient->mutex = semaphore_create(STR_SEM_MAIN_PATIENT_MUTEX, 0);
-    sems->patient_receptionist->mutex = semaphore_create(STR_SEM_PATIENT_RECEPT_MUTEX, 0);
-    sems->receptionist_doctor->mutex = semaphore_create(STR_SEM_RECEPT_DOCTOR_MUTEX, 0);
+    sprintf(buffer, "%s %d", STR_SEM_MAIN_PATIENT_EMPTY, getpid());
+    sems->main_patient->empty = semaphore_create(buffer, data->n_patients);
+    sprintf(buffer, "%s %d", STR_SEM_PATIENT_RECEPT_EMPTY, getpid());
+    sems->patient_receptionist->empty = semaphore_create(buffer, data->n_receptionists);
+    sprintf(buffer, "%s %d", STR_SEM_RECEPT_DOCTOR_EMPTY, getpid());
+    sems->receptionist_doctor->empty = semaphore_create(buffer, data->n_doctors);
+
+    sprintf(buffer, "%s %d", STR_SEM_MAIN_PATIENT_MUTEX, getpid());
+    sems->main_patient->mutex = semaphore_create(buffer, 1);
+    sprintf(buffer, "%s %d", STR_SEM_PATIENT_RECEPT_MUTEX, getpid());
+    sems->patient_receptionist->mutex = semaphore_create(buffer, 1);
+    sprintf(buffer, "%s %d", STR_SEM_RECEPT_DOCTOR_MUTEX, getpid());
+    sems->receptionist_doctor->mutex = semaphore_create(buffer, 1);
 }
 
 void wakeup_processes(struct data_container* data, struct semaphores* sems) {
@@ -365,17 +376,28 @@ void wakeup_processes(struct data_container* data, struct semaphores* sems) {
 
 void destroy_semaphores(struct semaphores* sems) {
 
-    semaphore_destroy(STR_SEM_MAIN_PATIENT_FULL, sems->main_patient->full);
-    semaphore_destroy(STR_SEM_PATIENT_RECEPT_FULL, sems->patient_receptionist->full);
-    semaphore_destroy(STR_SEM_RECEPT_DOCTOR_FULL, sems->receptionist_doctor->full);
+    char* buffer[25]; 
 
-    semaphore_destroy(STR_SEM_MAIN_PATIENT_EMPTY, sems->main_patient->empty);
-    semaphore_destroy(STR_SEM_PATIENT_RECEPT_EMPTY, sems->patient_receptionist->empty);
-    semaphore_destroy(STR_SEM_RECEPT_DOCTOR_EMPTY, sems->receptionist_doctor->empty);
+    sprintf(buffer, "%s %d", STR_SEM_MAIN_PATIENT_FULL, getpid());
+    semaphore_destroy(buffer, sems->main_patient->full);
+    sprintf(buffer, "%s %d", STR_SEM_PATIENT_RECEPT_FULL, getpid());
+    semaphore_destroy(buffer, sems->patient_receptionist->full);
+    sprintf(buffer, "%s %d", STR_SEM_RECEPT_DOCTOR_FULL, getpid());
+    semaphore_destroy(buffer, sems->receptionist_doctor->full);
 
-    semaphore_destroy(STR_SEM_MAIN_PATIENT_MUTEX, sems->main_patient->mutex);
-    semaphore_destroy(STR_SEM_PATIENT_RECEPT_MUTEX, sems->patient_receptionist->mutex);
-    semaphore_destroy(STR_SEM_RECEPT_DOCTOR_MUTEX, sems->receptionist_doctor->mutex);
+    sprintf(buffer, "%s %d", STR_SEM_MAIN_PATIENT_EMPTY, getpid());
+    semaphore_destroy(buffer, sems->main_patient->empty);
+    sprintf(buffer, "%s %d", STR_SEM_PATIENT_RECEPT_EMPTY, getpid());
+    semaphore_destroy(buffer, sems->patient_receptionist->empty);
+    sprintf(buffer, "%s %d", STR_SEM_RECEPT_DOCTOR_EMPTY, getpid());
+    semaphore_destroy(buffer, sems->receptionist_doctor->empty);
+
+    sprintf(buffer, "%s %d", STR_SEM_MAIN_PATIENT_MUTEX, getpid());
+    semaphore_destroy(buffer, sems->main_patient->mutex);
+    sprintf(buffer, "%s %d", STR_SEM_PATIENT_RECEPT_MUTEX, getpid());
+    semaphore_destroy(buffer, sems->patient_receptionist->mutex);
+    sprintf(buffer, "%s %d", STR_SEM_RECEPT_DOCTOR_MUTEX, getpid());
+    semaphore_destroy(buffer, sems->receptionist_doctor->mutex);
 
     deallocate_dynamic_memory(sems->main_patient);
     deallocate_dynamic_memory(sems->patient_receptionist);

@@ -20,7 +20,6 @@ int execute_receptionist(int receptionist_id, struct data_container* data, struc
         struct admission ad;
         receptionist_receive_admission(&ad, data, comm, sems);
         receptionist_process_admission(&ad, receptionist_id, data, sems);
-        printf("sending\n");
         receptionist_send_admission(&ad, data, comm, sems);
     }
     return (data->receptionist_stats)[receptionist_id];
