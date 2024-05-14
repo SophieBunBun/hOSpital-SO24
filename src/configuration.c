@@ -35,12 +35,15 @@ void add_to_config(FILE* fptr, struct config* confoog) {
 
 void copy_string(char* entry, char* exit) {
     int continuar = 0;
-    for (int i = 0; i < MAX_FILE_NAME && continuar == 0; i++) {
+    int index;
+    for (int i = 0; i < MAX_FILE_NAME-1 && continuar == 0; i++) {
         exit[i] = entry[i];
+        index = i;
         if (exit[i] == 0x00) {
             continuar = 1;
         }
     }
+    exit[index] = 0x00;
 }
 
 
