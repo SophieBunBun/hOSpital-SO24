@@ -169,7 +169,7 @@ void create_request(int* ad_counter, struct data_container* data, struct communi
     int patient_id = 0, doctor_id = 0;
     scanf("%d %d", &patient_id, &doctor_id);
 
-    char buffer[32];
+    char* buffer[32];
     fprintf(buffer, "ad %d %d", patient_id, doctor_id);
     register_to_log(log_file, buffer);
 
@@ -342,12 +342,12 @@ void create_semaphores(struct data_container* data, struct semaphores* sems) {
     sems->receptionist_doctor->full = semaphore_create(STR_SEM_RECEPT_DOCTOR_FULL, 0);
 
     sems->main_patient->empty = semaphore_create(STR_SEM_MAIN_PATIENT_EMPTY, data->n_patients);
-    sems->patient_receptionist->empty = semaphore_create(STR_SEM_PATIENT_RECEPT_EMPTY, data->n_patients);
-    sems->receptionist_doctor->empty = semaphore_create(STR_SEM_RECEPT_DOCTOR_EMPTY, data->n_receptionists);
+    sems->patient_receptionist->empty = semaphore_create(STR_SEM_PATIENT_RECEPT_EMPTY, data->n_receptionists);
+    sems->receptionist_doctor->empty = semaphore_create(STR_SEM_RECEPT_DOCTOR_EMPTY, data->n_doctors);
 
     sems->main_patient->mutex = semaphore_create(STR_SEM_MAIN_PATIENT_MUTEX, 0);
-    sems->patient_receptionist->full = semaphore_create(STR_SEM_PATIENT_RECEPT_MUTEX, 0);
-    sems->receptionist_doctor->full = semaphore_create(STR_SEM_RECEPT_DOCTOR_MUTEX, 0);
+    sems->patient_receptionist->mutex = semaphore_create(STR_SEM_PATIENT_RECEPT_MUTEX, 0);
+    sems->receptionist_doctor->mutex = semaphore_create(STR_SEM_RECEPT_DOCTOR_MUTEX, 0);
 }
 
 void wakeup_processes(struct data_container* data, struct semaphores* sems) {
@@ -374,7 +374,12 @@ void destroy_semaphores(struct semaphores* sems) {
     semaphore_destroy(STR_SEM_RECEPT_DOCTOR_EMPTY, sems->receptionist_doctor->empty);
 
     semaphore_destroy(STR_SEM_MAIN_PATIENT_MUTEX, sems->main_patient->mutex);
-    semaphore_destroy(STR_SEM_PATIENT_RECEPT_MUTEX, sems->patient_receptionist->full);
-    semaphore_destroy(STR_SEM_RECEPT_DOCTOR_MUTEX, sems->receptionist_doctor->full);
+    semaphore_destroy(STR_SEM_PATIENT_RECEPT_MUTEX, sems->patient_receptionist->mutex);
+    semaphore_destroy(STR_SEM_RECEPT_DOCTOR_MUTEX, sems->receptionist_doctor->mutex);
+
+    deallocate_dynamic_memory(sems->main_patient);
+    deallocate_dynamic_memory(sems->patient_receptionist);
+    deallocate_dynamic_memory(sems->receptionist_doctor);
+    deallocate_dynamic_memory(sems);
 
 }
