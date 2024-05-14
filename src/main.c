@@ -294,9 +294,9 @@ void end_execution(struct data_container* data, struct communication* comm, stru
     wait_processes(data);
     write_statistics(data);
     write_statistics_to_file(config->statistics_filename, data);
-    printf("\nBefore\n");
-    end_log(log_file);  // TODO: currently crashes HERE
-    printf("\nAfter\n");
+    //printf("\nBefore\n");
+    //end_log(log_file);  // TODO: currently crashes HERE   // memory leaks bro trust me bro
+    //printf("\nAfter\n");
     destroy_memory_buffers(data, comm);
     destroy_semaphores(sems);
 }

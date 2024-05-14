@@ -10,8 +10,11 @@
 
 //Estrutura que agrega a informação necessária pela main do hOSpital.
 struct data_container {
-	int max_ads;				//número máximo de admissões durante a execução
-	int buffers_size;			//tamanho máximo dos buffers de mem. partilhada
+	int max_ads;					//número máximo de admissões durante a execução
+	int buffers_size;				//tamanho máximo dos buffers de mem. partilhada
+	char log_filename[256];			//v4 nome do ficheiro log
+	char statistics_filename[256];	//v4 nome do ficheiro de estatisticas
+	int alarm_time;					//v4 numero de intervalo do alarme 
 	
 	int n_patients;				//número de pacientes
 	int n_receptionists;		//número de rececionistas
