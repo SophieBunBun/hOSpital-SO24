@@ -16,7 +16,7 @@ FILE* open_log(char* filename){
 }
 
 void register_to_log(FILE* file, char* command){
-    fprintf(file, "%s %s\n", "clock get time not working", command);
+    fprintf(file, "%s %s\n", get_current_timestamp(), command);
 }
 
 void end_log(FILE* file){

@@ -9,10 +9,9 @@
 #include <time.h>
 
 char* get_current_timestamp() {
-    struct timespec* ts;
-    clock_gettime(CLOCK_REALTIME, ts);
-
-    return get_timestamp(ts);
+    struct timespec tsp;
+    clock_gettime(CLOCK_REALTIME, &tsp);
+    return get_timestamp(&tsp);
 }
 
 char* get_timestamp(struct timespec* ts){

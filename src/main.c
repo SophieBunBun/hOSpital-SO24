@@ -175,7 +175,7 @@ void create_request(int* ad_counter, struct data_container* data, struct communi
     } else {
         printf("Erro: Buffer de admissões entre a main e os pacientes está cheio.\n");
     }
-
+    
     produce_end(sems->main_patient);
 }
 
