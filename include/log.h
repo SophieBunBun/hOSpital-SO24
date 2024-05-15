@@ -1,18 +1,30 @@
 /**
- * TODO: insert documentation
- */
+* Grupo SO-028
+* Sofia Santos  fc59804
+* Joao Dias     fc59854
+* Nuno Graxinha fc59855
+*/
 
 #ifndef LOG_GUARD
 #define LOG_GUARD
 
-#define _POSIX_C_SOURCE 199309L
+#define _POSIX_C_SOURCE 199309LSetups up sigint signal for main process 
 
 #include <stdio.h>
 
-FILE* open_log(char* filename);
+/**
+ * Starts the log file, storing it in its local global variable
+*/
+void start_log(char* filename);
 
-void register_to_log(FILE* file, char* input);
+/**
+ * Registers command to log file along with the time of register
+*/
+void register_to_log(char* input);
 
-void end_log(FILE* file);
+/**
+ * Ends the log file by closing it
+*/
+void end_log();
 
 #endif

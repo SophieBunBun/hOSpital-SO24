@@ -19,8 +19,6 @@
 #include "../include/configuration.h"
 #include "../include/synchronization.h"
 
-FILE *log_file;
-
 int main(int argc, char *argv[]) {
     //init data structures
     struct data_container* data = allocate_dynamic_memory(sizeof(struct data_container));
@@ -48,7 +46,7 @@ int main(int argc, char *argv[]) {
     launch_processes(data, comm, sems);
 
     //Setting up main environment
-    log_file = open_log(data->log_filename);
+    open_log(data->log_filename);
     sigint_main_setup();
     start_alarm(data->alarm_time);
 
@@ -128,20 +126,20 @@ void user_interaction(struct data_container* data, struct communication* comm, s
         if (strcmp(command, "ad") == 0) {
             create_request(&ad_counter, data, comm, sems);
         } else if (strcmp(command, "info") == 0) {
-            register_to_log(log_file, command);
+            register_to_log(command);
             read_info(data, sems);
         } else if (strcmp(command, "status") == 0) {
-            register_to_log(log_file, command);
+            register_to_log(command);
             print_status(data, sems);
         } else if (strcmp(command, "help") == 0) {
-            register_to_log(log_file, command);
+            register_to_log(command);
             printf("Comandos disponíveis:\n");
             printf("  - ad paciente médico: Cria uma nova admissão\n");
             printf("  - info: Verifica o estado de uma admissão\n");
             printf("  - help: Exibe uma lista de comandos disponíveis\n");
             printf("  - end: Termina a execução do hOSpital\n");
         } else if (strcmp(command, "end") == 0) {
-            register_to_log(log_file, command);
+            register_to_log(command);
             end_execution(data, comm, sems);
             break;
         } else {
@@ -156,7 +154,7 @@ void create_request(int* ad_counter, struct data_container* data, struct communi
     scanf("%d %d", &patient_id, &doctor_id);
     char* buffer[32];
     sprintf(buffer, "ad %d %d", patient_id, doctor_id);
-    register_to_log(log_file, buffer);
+    register_to_log(buffer);
 
     produce_begin(sems->main_patient);
     
@@ -268,7 +266,7 @@ void end_execution(struct data_container* data, struct communication* comm, stru
     write_statistics_to_file(data->statistics_filename, data);
     destroy_semaphores(sems);
     destroy_memory_buffers(data, comm);
-    end_log(log_file);
+    end_log();
     exit(0);
 }
 

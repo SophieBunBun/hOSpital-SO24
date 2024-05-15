@@ -9,16 +9,17 @@
 #include <sys/types.h>
 #include <time.h>
 
-FILE* open_log(char* filename){
-    FILE* file = fopen(filename, "w");
-    fprintf(file, "[Log Start]\n");
-    return file;
+FILE* log_file;
+
+void start_log(char* filename){
+    log_file = fopen(filename, "w");
+    fprintf(log_file, "[Log Start]\n");
 }
 
-void register_to_log(FILE* file, char* command){
-    fprintf(file, "%s %s\n", get_current_timestamp(), command);
+void register_to_log(char* command){
+    fprintf(log_file, "%s %s\n", get_current_timestamp(), command);
 }
 
-void end_log(FILE* file){
-    fclose(file);
+void end_log(){
+    fclose(log_file);
 }
