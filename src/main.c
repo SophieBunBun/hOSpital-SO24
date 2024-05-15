@@ -10,6 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "../include/stats.h"
+#include "../include/hosptime.h"
 #include "../include/log.h"
 #include "../include/memory.h"
 #include "../include/process.h"
@@ -156,6 +157,7 @@ void user_interaction(struct data_container* data, struct communication* comm, s
             printf("  - help: Exibe uma lista de comandos disponíveis\n");
             printf("  - end: Termina a execução do hOSpital\n");
         } else if (strcmp(command, "end") == 0) {
+            register_to_log(log_file, command);
             end_execution(data, comm, sems);
             break;
         } else {
@@ -168,9 +170,8 @@ void create_request(int* ad_counter, struct data_container* data, struct communi
 
     int patient_id = 0, doctor_id = 0;
     scanf("%d %d", &patient_id, &doctor_id);
-
     char* buffer[32];
-    fprintf(buffer, "ad %d %d", patient_id, doctor_id);
+    sprintf(buffer, "ad %d %d", patient_id, doctor_id);
     register_to_log(log_file, buffer);
 
     produce_begin(sems->main_patient);
@@ -183,6 +184,7 @@ void create_request(int* ad_counter, struct data_container* data, struct communi
         new_admission.requesting_patient = patient_id;
         new_admission.requested_doctor = doctor_id;
         new_admission.status = 'M';
+        register_creation_time(&new_admission);
 
         write_main_patient_buffer(comm->main_patient, data->buffers_size, &new_admission);
         printf("Nova admissão criada com ID: %d\n", admission_id);

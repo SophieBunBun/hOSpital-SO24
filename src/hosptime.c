@@ -6,19 +6,26 @@
 #include <sys/types.h>
 #include <time.h>
 
+char* get_current_timestamp() {
+    struct timespec* ts;
+    clock_gettime(CLOCK_REALTIME, ts);
+
+    return get_timestamp(ts);
+}
+
 char* get_timestamp(struct timespec* ts){
-    struct tm *lctime = localtime(&ts);
-    char* timestamp[40];
-    strftime(timestamp, 40, "%x_%H:%M:%S", lctime);
-    char* nano[64];
-    sprintf(nano, "%d", ts->tv_nsec);
 
-    char* timestampFinal[strlen(timestamp) + 4];
-    strcpy(timestampFinal, timestamp);
-    strcat(timestampFinal, ".");
-    strncat(timestampFinal, nano, 3);
+    char* buffer = (char*)malloc(sizeof(char) * 80);
+    if (buffer == NULL) {
+        perror("Erro ao alocar memória para o buffer de tempo");
+        exit(1);
+    }
 
-    return &timestampFinal;
+    struct tm timeinfo;
+    strftime(buffer, 80, "%d/%m/%Y_%H:%M:%S", localtime_r(&ts->tv_sec, &timeinfo));
+    sprintf(buffer + strlen(buffer), ".%03ld", ts->tv_nsec / 1000000);
+
+    return buffer;
 }
 
 void register_creation_time(struct admission* ad){

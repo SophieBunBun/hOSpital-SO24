@@ -10,6 +10,7 @@
 #include "../include/stats.h"
 #include "../include/memory.h"
 #include "../include/main.h"
+#include "../include/hosptime.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -29,24 +30,6 @@ void write_statistics_to_file(char* filename, struct data_container* data) {
     
     fclose(file);
 }
-
-char* get_formatted_time() {
-    struct timespec ts;
-    clock_gettime(CLOCK_REALTIME, &ts);
-
-    char* buffer = (char*)malloc(sizeof(char) * 80);
-    if (buffer == NULL) {
-        perror("Erro ao alocar memória para o buffer de tempo");
-        exit(EXIT_FAILURE);
-    }
-
-    struct tm timeinfo;
-    strftime(buffer, 80, "%d/%m/%Y_%H:%M:%S", localtime_r(&ts.tv_sec, &timeinfo));
-    sprintf(buffer + strlen(buffer), ".%03ld", ts.tv_nsec / 1000000);
-
-    return buffer;
-}
-
 
 void write_process_statistics(FILE* file, struct data_container* data) {
     
@@ -74,15 +57,15 @@ void write_admission_statistics(FILE* file, struct data_container* data) {
         fprintf(file, "Patient id: %d\n", ad.requesting_patient);
         fprintf(file, "Receptionist id: %d\n", ad.receiving_receptionist);
         fprintf(file, "Doctor id: %d\n", ad.receiving_doctor);
-        fprintf(file, "Start time: %s.%09ld\n", get_formatted_time(), ad.create_time.tv_nsec);
-        fprintf(file, "Patient time: %s.%09ld\n", get_formatted_time(), ad.patient_time.tv_nsec);
-        fprintf(file, "Receptionist time: %s.%09ld\n", get_formatted_time(), ad.receptionist_time.tv_nsec);
-        fprintf(file, "Doctor time: %s.%09ld\n", get_formatted_time(), ad.doctor_time.tv_nsec);
+        fprintf(file, "Start time: %s\n", get_timestamp(&ad.create_time));
+        fprintf(file, "Patient time: %s\n", get_timestamp(&ad.patient_time));
+        fprintf(file, "Receptionist time: %s\n", get_timestamp(&ad.receptionist_time));
+        fprintf(file, "Doctor time: %s\n", get_timestamp(&ad.doctor_time));
 
         double admission_start_time_seconds = get_seconds_from_time(ad.create_time);
         double doctor_time_seconds = get_seconds_from_time(ad.doctor_time);
         double total_time_seconds = doctor_time_seconds - admission_start_time_seconds;
-        fprintf(file, "Total Time: %.3f\n", total_time_seconds);
+        fprintf(file, "Total Time: %.9f\n", total_time_seconds);
 
     }
 }

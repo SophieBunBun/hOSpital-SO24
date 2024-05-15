@@ -42,6 +42,9 @@ void receptionist_process_admission(struct admission* ad, int receptionist_id, s
         (data->receptionist_stats)[receptionist_id] += 1;
         (data->results)[ad->id] = *ad;
     }
+    else {
+        semaphore_unlock(sems->patient_receptionist->full);
+    }
     consume_end(sems->patient_receptionist);
 }
 

@@ -25,9 +25,6 @@ void write_process_statistics(FILE* file, struct data_container* data);
 // Função para escrever as estatísticas das admissões
 void write_admission_statistics(FILE* file, struct data_container* data);
 
-// Função para obter a string de tempo formatada
-char* get_formatted_time();
-
 // Função para converter timespec em segundos
 double get_seconds_from_time(struct timespec ts);
 

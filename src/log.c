@@ -16,16 +16,9 @@ FILE* open_log(char* filename){
 }
 
 void register_to_log(FILE* file, char* command){
-
-    struct timespec timesp;
-    clock_gettime(CLOCK_REALTIME, &timesp);
-    char* timestamp = get_timestamp(&timesp);
-    fprintf(file, "%s %s\n", timestamp, command);
+    fprintf(file, "%s %s\n", get_current_timestamp(), command);
 }
 
 void end_log(FILE* file){
-    if (file != NULL){
-        printf("pointer valid\n");
-        fclose(file);
-    }
+    fclose(file);
 }

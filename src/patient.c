@@ -41,6 +41,9 @@ void patient_process_admission(struct admission* ad, int patient_id, struct data
         (data -> patient_stats)[patient_id] += 1;
         (data->results)[ad->id] = *ad;
     }
+    else {
+        semaphore_unlock(sems->main_patient->full);
+    }
     consume_end(sems->main_patient);
 }
 
