@@ -16,21 +16,21 @@ FILE* read_file(char* filename) {
     return fptr;
 }
 
-void add_to_config(FILE* fptr, struct config* confoog) {
+void add_to_data(FILE* fptr, struct data_container* data) {
     char thisLine[MAX_FILE_NAME];
-    confoog->max_ads = next_line_int(fptr, thisLine);   // ok but what if it's not an int?
-    confoog->buffers_size = next_line_int(fptr, thisLine);
+    data->max_ads = next_line_int(fptr, thisLine);   // ok but what if it's not an int?
+    data->buffers_size = next_line_int(fptr, thisLine);
 
-    confoog->n_patients = next_line_int(fptr, thisLine);
-    confoog->n_receptionists = next_line_int(fptr, thisLine);
-    confoog->n_doctors = next_line_int(fptr, thisLine);
+    data->n_patients = next_line_int(fptr, thisLine);
+    data->n_receptionists = next_line_int(fptr, thisLine);
+    data->n_doctors = next_line_int(fptr, thisLine);
 
     next_line(fptr, thisLine);
-    copy_string(thisLine, confoog->log_filename);
+    copy_string(thisLine, data->log_filename);
     next_line(fptr, thisLine);
-    copy_string(thisLine, confoog->statistics_filename);
+    copy_string(thisLine, data->statistics_filename);
 
-    confoog->alarm_time = next_line_int(fptr, thisLine);
+    data->alarm_time = next_line_int(fptr, thisLine);
 }
 
 void copy_string(char* entry, char* exit) {
@@ -86,15 +86,6 @@ char* next_line (FILE* fptr, char* line) {    // I so wanted to call this "tsugi
 
 int next_line_int(FILE* fptr, char* line) {
     return to_int(next_line(fptr, line));
-}
-
-void add_to_data(struct config* confoog, struct data_container* data) {
-    data->max_ads = confoog->max_ads;
-    data->buffers_size = confoog->buffers_size;
-
-    data->n_patients = confoog->n_patients;
-    data->n_receptionists = confoog->n_receptionists;
-    data->n_doctors = confoog->n_doctors;
 }
 
 void exit_program (char* error) {
