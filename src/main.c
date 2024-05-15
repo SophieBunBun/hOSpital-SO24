@@ -19,7 +19,6 @@
 #include "../include/configuration.h"
 #include "../include/synchronization.h"
 
-struct config* config;  // TODO: use updated header files
 FILE *log_file;
 
 int main(int argc, char *argv[]) {
@@ -29,7 +28,6 @@ int main(int argc, char *argv[]) {
     comm->main_patient = allocate_dynamic_memory(sizeof(struct circular_buffer));
     comm->patient_receptionist = allocate_dynamic_memory(sizeof(struct rnd_access_buffer));
     comm->receptionist_doctor = allocate_dynamic_memory(sizeof(struct circular_buffer));
-    config = allocate_dynamic_memory(sizeof(struct config));
 
      // init semaphore data structure
     struct semaphores* sems = allocate_dynamic_memory(sizeof(struct semaphores));
@@ -50,9 +48,9 @@ int main(int argc, char *argv[]) {
     launch_processes(data, comm, sems);
 
     //Setting up main environment
-    log_file = open_log(config->log_filename);
+    log_file = open_log(data->log_filename);
     sigint_main_setup();
-    start_alarm(config->alarm_time);
+    start_alarm(data->alarm_time);
 
     //Run main loop
     user_interaction(data, comm, sems);
@@ -63,24 +61,10 @@ void main_args(int argc, char* argv[], struct data_container* data) {
         printf("Uso: ./hOSpital inputFile\n");
         exit(EXIT_FAILURE);
     }
-    
-    /**
-     * TODO: find some way to add things to config without doing a hack
-     * 
-     * Despite a lot of its data being made redundant by data,
-     * config is necessary because of alarm_time, log_filename and statistics_filename;
-     * if not for config, we would still need some way to store these
-     * 
-     * We cannot change main.h to make main_args include that as an argument, probably for security reasons.
-     * 
-     * The way I implemented it was by creating config outside of main and then having main initialize it
-     * so other functions could call it without altering main.h; this is a hack, a band-aid, a bad practice to get things to work
-    */
 
     FILE *fptr = read_file(argv[1]);
-    add_to_config(fptr, config);
+    add_to_data(fptr, data);
     fclose(fptr);
-    add_to_data(config, data);
 }   
     
 void allocate_dynamic_memory_buffers(struct data_container* data) {
@@ -281,7 +265,7 @@ void end_execution(struct data_container* data, struct communication* comm, stru
     wakeup_processes(data, sems);
     wait_processes(data);
     write_statistics(data);
-    write_statistics_to_file(config->statistics_filename, data);
+    write_statistics_to_file(data->statistics_filename, data);
     destroy_semaphores(sems);
     destroy_memory_buffers(data, comm);
     exit(0);

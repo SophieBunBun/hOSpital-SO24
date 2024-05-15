@@ -22,17 +22,6 @@
 #define FILE_FOUND      "File successfully read!\n"
 #define FILE_BAD_FORMAT "File is not in expected format!\n"
 
-struct config {
-    int max_ads;                //nº máximo de admissões
-    int buffers_size;           //tamanho dos buffers
-    int n_patients;             //nº de pacientes
-    int n_receptionists;        //nº de rececionistas
-    int n_doctors;              //nº de médicos
-    char log_filename[MAX_FILE_NAME];         //nome do ficheiro de log
-    char statistics_filename[MAX_FILE_NAME];  //nome do ficheiro de estatísticas
-    int alarm_time;             //temporização para o alarme
-};
-
 /**
  * Opens the file and checks whether it exists
  * It will print error messages to the screen to let the user know
@@ -42,9 +31,9 @@ struct config {
 FILE* read_file(char* filename);
 
 /**
- * Adds the information in the file to the a config for safekeeping.
+ * Adds the information in the file to data.
 */
-void add_to_config(FILE* fptr, struct config* confoog);
+void add_to_data(FILE* fptr, struct data_container* data);
 
 /**
  * While this could just be done with atoi,
@@ -75,11 +64,6 @@ int is_number(char chara);
  * If it tries to read a line that does not exist, it will exit the program.
 */
 char* next_line (FILE* fptr, char* line);
-
-/**
- * Adds the data in the config to the data_container.
-*/
-void add_to_data(struct config* confoog, struct data_container* data);
 
 /**
  * Exits the program and displays an error message.
