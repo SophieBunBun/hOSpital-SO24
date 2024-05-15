@@ -278,6 +278,7 @@ void end_execution(struct data_container* data, struct communication* comm, stru
     
     *(data->terminate) = 1;
 
+    wakeup_processes(data, sems);
     wait_processes(data);
     write_statistics(data);
     write_statistics_to_file(config->statistics_filename, data);
@@ -361,6 +362,17 @@ void create_semaphores(struct data_container* data, struct semaphores* sems) {
     sems->patient_receptionist->mutex = semaphore_create(buffer, 1);
     sprintf(buffer, "%s %d", STR_SEM_RECEPT_DOCTOR_MUTEX, getpid());
     sems->receptionist_doctor->mutex = semaphore_create(buffer, 1);
+
+    sprintf(buffer, "%s %d", STR_SEM_PATIENT_STATS_MUTEX, getpid());
+    sems->patient_stats_mutex = semaphore_create(buffer, 1);
+    sprintf(buffer, "%s %d", STR_SEM_RECEPT_STATS_MUTEX, getpid());
+    sems->receptionist_stats_mutex = semaphore_create(buffer, 1);
+    sprintf(buffer, "%s %d", STR_SEM_DOCTOR_STATS_MUTEX, getpid());
+    sems->doctor_stats_mutex = semaphore_create(buffer, 1);
+    sprintf(buffer, "%s %d", STR_SEM_RESULTS_MUTEX, getpid());
+    sems->results_mutex = semaphore_create(buffer, 1);
+    sprintf(buffer, "%s %d", STR_SEM_TERMINATE_MUTEX, getpid());
+    sems->terminate_mutex = semaphore_create(buffer, 1);
 }
 
 void wakeup_processes(struct data_container* data, struct semaphores* sems) {
@@ -400,6 +412,17 @@ void destroy_semaphores(struct semaphores* sems) {
     semaphore_destroy(buffer, sems->patient_receptionist->mutex);
     sprintf(buffer, "%s %d", STR_SEM_RECEPT_DOCTOR_MUTEX, getpid());
     semaphore_destroy(buffer, sems->receptionist_doctor->mutex);
+
+    sprintf(buffer, "%s %d", STR_SEM_PATIENT_STATS_MUTEX, getpid());
+    semaphore_destroy(buffer, sems->patient_stats_mutex);
+    sprintf(buffer, "%s %d", STR_SEM_RECEPT_STATS_MUTEX, getpid());
+    semaphore_destroy(buffer, sems->receptionist_stats_mutex);
+    sprintf(buffer, "%s %d", STR_SEM_DOCTOR_STATS_MUTEX, getpid());
+    semaphore_destroy(buffer, sems->doctor_stats_mutex);
+    sprintf(buffer, "%s %d", STR_SEM_RESULTS_MUTEX, getpid());
+    semaphore_destroy(buffer, sems->results_mutex);
+    sprintf(buffer, "%s %d", STR_SEM_TERMINATE_MUTEX, getpid());
+    semaphore_destroy(buffer, sems->terminate_mutex);
 
     deallocate_dynamic_memory(sems->main_patient);
     deallocate_dynamic_memory(sems->patient_receptionist);

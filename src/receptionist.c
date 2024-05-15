@@ -39,8 +39,15 @@ void receptionist_process_admission(struct admission* ad, int receptionist_id, s
         ad->receiving_receptionist = receptionist_id;
         ad->status = 'R';
 
-        (data->receptionist_stats)[receptionist_id] += 1;
+
+        semaphore_lock(sems->receptionist_stats_mutex);
+        (data -> receptionist_stats)[receptionist_id] += 1;
+        semaphore_unlock(sems->receptionist_stats_mutex);
+
+        semaphore_lock(sems->results_mutex);
         (data->results)[ad->id] = *ad;
+        semaphore_unlock(sems->results_mutex);
+        
     }
     else {
         semaphore_unlock(sems->patient_receptionist->full);

@@ -41,8 +41,14 @@ void doctor_process_admission(struct admission* ad, int doctor_id, struct data_c
             ad->status = 'N';
         }
         ad->receiving_doctor = doctor_id;
+
+        semaphore_lock(sems->doctor_stats_mutex);
         (data->doctor_stats)[doctor_id] += 1;
+        semaphore_unlock(sems->doctor_stats_mutex);
+
+        semaphore_lock(sems->results_mutex);
         (data->results)[ad->id] = *ad;
+        semaphore_unlock(sems->results_mutex);
     }
     else {
         semaphore_unlock(sems->receptionist_doctor->full);

@@ -38,8 +38,14 @@ void patient_process_admission(struct admission* ad, int patient_id, struct data
         ad -> receiving_patient = patient_id;
         ad -> status = 'P';
 
+        semaphore_lock(sems->patient_stats_mutex);
         (data -> patient_stats)[patient_id] += 1;
+        semaphore_unlock(sems->patient_stats_mutex);
+
+        semaphore_lock(sems->results_mutex);
         (data->results)[ad->id] = *ad;
+        semaphore_unlock(sems->results_mutex);
+
     }
     else {
         semaphore_unlock(sems->main_patient->full);
