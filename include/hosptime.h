@@ -5,8 +5,6 @@
 #ifndef HOSPTIME_GUARD
 #define HOSPTIME_GUARD
 
-#define _POSIX_C_SOURCE 199309L
-
 #include "../include/hosptime.h"
 #include "../include/memory.h"
 

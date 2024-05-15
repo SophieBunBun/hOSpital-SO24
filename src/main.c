@@ -268,6 +268,7 @@ void end_execution(struct data_container* data, struct communication* comm, stru
     write_statistics_to_file(data->statistics_filename, data);
     destroy_semaphores(sems);
     destroy_memory_buffers(data, comm);
+    end_log(log_file);
     exit(0);
 }
 

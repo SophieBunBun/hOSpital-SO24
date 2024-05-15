@@ -11,12 +11,12 @@
 
 FILE* open_log(char* filename){
     FILE* file = fopen(filename, "w");
-    fprintf(file, "[Log Start] %d\n", getpid());
+    fprintf(file, "[Log Start]\n");
     return file;
 }
 
 void register_to_log(FILE* file, char* command){
-    fprintf(file, "%s %s\n", get_current_timestamp(), command);
+    fprintf(file, "%s %s\n", "clock get time not working", command);
 }
 
 void end_log(FILE* file){
