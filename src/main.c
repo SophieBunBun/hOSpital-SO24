@@ -284,6 +284,7 @@ void end_execution(struct data_container* data, struct communication* comm, stru
     write_statistics_to_file(config->statistics_filename, data);
     destroy_semaphores(sems);
     destroy_memory_buffers(data, comm);
+    exit(0);
 }
 
 void wait_processes(struct data_container* data) {
