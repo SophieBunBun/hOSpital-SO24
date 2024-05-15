@@ -1,17 +1,27 @@
 Process Statistics:
 	Patient 0 requested 0 admissions!
-	Patient 1 requested 0 admissions!
+	Patient 1 requested 9 admissions!
 	Patient 2 requested 0 admissions!
 	Patient 3 requested 0 admissions!
 	Patient 4 requested 0 admissions!
-	Receptionist 0 forwarded 0 admissions!
+	Receptionist 0 forwarded 9 admissions!
 	Receptionist 1 forwarded 0 admissions!
 	Receptionist 2 forwarded 0 admissions!
 	Receptionist 3 forwarded 0 admissions!
 	Receptionist 4 forwarded 0 admissions!
 	Doctor 0 processed 0 admissions!
-	Doctor 1 processed 0 admissions!
+	Doctor 1 processed 9 admissions!
 	Doctor 2 processed 0 admissions!
 	Doctor 3 processed 0 admissions!
 	Doctor 4 processed 0 admissions!
 Admission Statistics:
+Admission: 1
+Status: N
+Patient id: 1
+Receptionist id: 0
+Doctor id: 1
+Start time: 15/05/2024_17:12:55.680
+Patient time: 15/05/2024_17:12:55.680
+Receptionist time: 15/05/2024_17:12:55.680
+Doctor time: 15/05/2024_17:12:55.680
+Total Time: 0.000503063

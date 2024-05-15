@@ -134,7 +134,7 @@ void launch_processes(struct data_container* data, struct communication* comm, s
 
 void user_interaction(struct data_container* data, struct communication* comm, struct semaphores* sems) {
     char command[20];
-    int ad_counter = 0;
+    int ad_counter = 1;
 
     printf("Bem-vindo ao hOSpital! Digite 'help' para obter uma lista de comandos.\n");
 

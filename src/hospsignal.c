@@ -43,31 +43,31 @@ void start_alarm(int alarm_time_in){
 
 void handle_alarm(){
     int ad_in = 0;
-    while ((data->results)[ad_in].id == ad_in){
+    while (data->max_ads > ad_in && (data->results)[ad_in].id != 0){
         struct admission ad = (data->results)[ad_in];
 
         switch (ad.status)
         {
         case 'M':
-            printf("ad:%d status:%s start_time:%s\n",
-             ad.id, ad.status, ad.create_time.tv_sec);
+            printf("ad:%d status:%s start_time:%d\n",
+             ad.id, &ad.status, ad.create_time.tv_sec);
             break;
 
         case 'P':
             printf("ad:%d status:%s start_time:%d patient:%d patient_time:%d\n",
-             ad.id, ad.status, ad.create_time.tv_sec, ad.receiving_patient, ad.patient_time);
+             ad.id, &ad.status, ad.create_time.tv_sec, ad.receiving_patient, ad.patient_time.tv_sec);
             break;
 
         case 'R':
             printf("ad:%d status:%s start_time:%d patient:%d patient_time:%d receptionist:%d receptionist_time:%d\n",
-             ad.id, ad.status, ad.create_time.tv_sec, ad.receiving_patient, ad.patient_time,
-             ad.receiving_receptionist, ad.receptionist_time);
+             ad.id, &ad.status, ad.create_time.tv_sec, ad.receiving_patient, ad.patient_time.tv_sec,
+             ad.receiving_receptionist, ad.receptionist_time.tv_sec);
             break;
         
         default:
             printf("ad:%d status:%s start_time:%d patient:%d patient_time:%d receptionist:%d receptionist_time:%d doctor:%d doctor_time:%d\n",
-             ad.id, ad.status, ad.create_time.tv_sec, ad.receiving_patient, ad.patient_time,
-             ad.receiving_receptionist, ad.receptionist_time, ad.receiving_doctor, ad.doctor_time);
+             ad.id, &ad.status, ad.create_time.tv_sec, ad.receiving_patient, ad.patient_time.tv_sec,
+             ad.receiving_receptionist, ad.receptionist_time.tv_sec, ad.receiving_doctor, ad.doctor_time.tv_sec);
             break;
         }
         

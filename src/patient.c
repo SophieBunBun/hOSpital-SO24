@@ -43,7 +43,7 @@ void patient_process_admission(struct admission* ad, int patient_id, struct data
         semaphore_unlock(sems->patient_stats_mutex);
 
         semaphore_lock(sems->results_mutex);
-        (data->results)[ad->id] = *ad;
+        (data->results)[ad->id - 1] = *ad;
         semaphore_unlock(sems->results_mutex);
 
     }
