@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     launch_processes(data, comm, sems);
 
     //Setting up main environment
-    open_log(data->log_filename);
+    start_log(data->log_filename);
     sigint_main_setup();
     start_alarm(data->alarm_time);
 
