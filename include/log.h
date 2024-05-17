@@ -8,7 +8,7 @@
 #ifndef LOG_GUARD
 #define LOG_GUARD
 
-#define _POSIX_C_SOURCE 199309LSetups up sigint signal for main process 
+#define _POSIX_C_SOURCE 199309L //Setups up sigint signal for main process 
 
 #include <stdio.h>
 
